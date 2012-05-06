@@ -1,0 +1,16 @@
+{ "name" : "Cheeseburger",
+  "course" : "main",
+  "serving_size" : 1,
+  "ingredients" :
+   [ "Beef Patty" : "1/4 lb",
+     "Sesame Seed Bun" : "2 pcs",
+     "Sliced Cheese" : "1 pcs"
+   ],
+  "instructions" :
+   [ "Fry patty",
+     "Put patty on top of bottom bun",
+     "Put cheese on top of patty",
+     "Put top bun on top of cheese",
+     "Profit"
+   ]
+}

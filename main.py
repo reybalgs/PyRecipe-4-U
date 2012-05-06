@@ -14,6 +14,6 @@
 # Main program/file. Run this to run the entire program.
 
 # Importing stuff
-import simplejson # sqlite3 imports
+import simplejson as json # json imports
 
-
+printf 'Hello world!'
