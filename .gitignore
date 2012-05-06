@@ -1,0 +1,5 @@
+# ignore .swp vim files
+*.swp
+
+# ignore Python output leftovers
+*.pyc
