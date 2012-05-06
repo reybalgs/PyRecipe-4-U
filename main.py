@@ -12,3 +12,8 @@
 # main.py
 #
 # Main program/file. Run this to run the entire program.
+
+# Importing stuff
+import simplejson # sqlite3 imports
+
+
