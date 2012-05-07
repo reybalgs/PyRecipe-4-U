@@ -13,10 +13,11 @@ import sys # for system calls we might need
 from PySide.QtCore import *
 from PySide.QtGui import *
 
+# Shinylist import
+from shinylist import *
+
 # Qt App declaration
 app = QApplication(sys.argv)
-
-
 
 class MainWindow(QWidget):
     # The main window class, inherits QWidget
@@ -31,11 +32,8 @@ class MainWindow(QWidget):
         self.mainLayout = QVBoxLayout() # main layout
         self.splitViewLayout = QHBoxLayout() # splitting layout
 
-        self.recipeTable = QTableWidget(15, 3, self) # the table of recipes
-        # Initialize the column names
-        self.recipeTableColumns = ['Name', 'Course', 'Serving Size']
-        # Set the column names
-        self.recipeTable.setHorizontalHeaderLabels(self.recipeTableColumns)
+        # Create the shinylist
+        self.recipeList = ShinyList()
 
         self.recipeOverviewLayout = QFormLayout() # layout for recipe overview
         self.rightHandLayout = QVBoxLayout() # layout for the right hand side
@@ -69,7 +67,7 @@ class MainWindow(QWidget):
         
         # Add the table to the split layout, being the first, it's
         # automatically put to the left.
-        self.splitViewLayout.addWidget(self.recipeTable)
+        self.splitViewLayout.addWidget(self.recipeList)
         # Add the right hand layout to the split layout.
         self.splitViewLayout.addLayout(self.rightHandLayout)
         
