@@ -16,4 +16,10 @@
 # Importing stuff
 import simplejson as json # json imports
 
-printf 'Hello world!'
+# GUI stuff
+from gui.mainwindow import *
+
+print 'Hello world!'
+
+window = MainWindow()
+sys.exit(app.exec_())
