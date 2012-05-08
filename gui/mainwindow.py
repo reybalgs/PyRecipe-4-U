@@ -16,11 +16,26 @@ from PySide.QtGui import *
 # Shinylist import
 from shinylist import *
 
+# Recipe dialogs import
+from recipe import *
+
 # Qt App declaration
 app = QApplication(sys.argv)
 
 class MainWindow(QWidget):
     # The main window class, inherits QWidget
+
+    def add_recipe(self):
+        """
+        Function that is called whenever the 'Add Recipe' button in the main
+        screen has been clicked.
+
+        Invokes an Add Recipe dialog, then catches its return value.
+        """
+        # TODO: Add actual processing of values here
+        addRecipeDialog = AddRecipeWindow(self)
+        addRecipeDialog.exec_() # execute the dialog
+
     def init_ui(self):
         """
         Function that initializes the UI components of the app.
@@ -87,6 +102,9 @@ class MainWindow(QWidget):
         self.rightHandLayout.addWidget(self.addRecipeButton)
         self.rightHandLayout.addWidget(self.deleteRecipeButton)
         self.rightHandLayout.addWidget(self.generateShoppingListButton)
+
+        # Initialize the buttons signals and slots
+        self.addRecipeButton.clicked.connect(self.add_recipe)
 
         self.show() # Show the window
 

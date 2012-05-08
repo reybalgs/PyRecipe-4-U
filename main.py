@@ -15,6 +15,7 @@
 
 # Importing stuff
 import simplejson as json # json imports
+import sys
 
 # GUI stuff
 from gui.mainwindow import *
