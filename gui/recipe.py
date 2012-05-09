@@ -14,6 +14,9 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 
+# Import recipe model
+from models.recipemodel import *
+
 import sys
 
 class RecipeWindow(QDialog):
@@ -48,14 +51,32 @@ class RecipeWindow(QDialog):
         self.instructionsButton = QPushButton("Instructions")
         self.submitButton = QPushButton("Submit")
 
+    def get_recipe(self):
+        """
+        Returns the recipe in this dialog
+        """
+        return self.recipe
+
     def submit(self):
+        """
+        Puts all the form data into a model and returns that model to the
+        main screen
+        """
+        self.recipe = RecipeModel() # Create a model
+        
+        # Put all the information in the forms into the model
+        self.recipe.name = self.nameData.text()
+        self.recipe.course = self.courseData.currentText()
+        self.recipe.servingSize = self.servingSizeData.value()
+
         print 'Form submitted!'
-        self.done()
+        self.done(0)
 
     def init_layout(self):
         """
         Initializes the layout of the dialog. Usually called by its subclasses.
         """
+        self.mainLayout.addWidget(self.windowTitle)
         self.mainLayout.addLayout(self.formLayout)
 
         # Initialize the form
@@ -94,6 +115,8 @@ class AddRecipeWindow(RecipeWindow):
 
         # Initialize the layout
         self.init_layout()
+        # Initialize signals
+        self.init_signals()
 
 
 class EditRecipeWindow(RecipeWindow):
@@ -109,3 +132,5 @@ class EditRecipeWindow(RecipeWindow):
 
         # Initialize the layout
         self.init_layout()
+        # Initialize signals
+        self.init_signals()

@@ -16,6 +16,9 @@ from PySide.QtGui import *
 # Shinylist import
 from shinylist import *
 
+# Recipe model import
+from models.recipemodel import *
+
 # Recipe dialogs import
 from recipe import *
 
@@ -24,6 +27,17 @@ app = QApplication(sys.argv)
 
 class MainWindow(QWidget):
     # The main window class, inherits QWidget
+    
+    def transform_add_button(self):
+        """
+        Transforms the Add Recipe button into an Edit Recipe button whenever an
+        item is selected in the list.
+
+        Also modifies the "edit_selected" variable to reflect that the system
+        is ready to edit a recipe.
+        """
+        self.addRecipeButton.setText("Edit Recipe")
+        self.edit_selected = 1
 
     def add_recipe(self):
         """
@@ -33,8 +47,23 @@ class MainWindow(QWidget):
         Invokes an Add Recipe dialog, then catches its return value.
         """
         # TODO: Add actual processing of values here
+        # Create a Recipe model to be passed to the dialog to be invoked
+        recipe = RecipeModel() # create a recipe model
         addRecipeDialog = AddRecipeWindow(self)
         addRecipeDialog.exec_() # execute the dialog
+        recipe = addRecipeDialog.get_recipe() # get the recipe from the dialog
+
+        # Create a ShinyList item
+        item = ShinyListItem()
+
+        # Set shinylist text
+        item.set_main_text(str(recipe.name))
+        item.set_sub_text(recipe.course + ', serves ' +
+                          str(recipe.servingSize))
+
+        # Add the item to the shinylist
+        self.recipeList.add_item(item)
+        print 'Item added to shinylist'
 
     def init_ui(self):
         """
@@ -116,6 +145,9 @@ class MainWindow(QWidget):
         """
         # Initialize base class
         super(MainWindow, self).__init__(parent)
+
+        # Variable to "announce" whether the system is ready to edit a recipe.
+        self.edit_selected = 0
 
         print 'Initializing UI...' # some debug messages
 
