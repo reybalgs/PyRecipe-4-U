@@ -99,6 +99,12 @@ class IngredientsWindow(QDialog):
                                      str(ingredient[1]) + " " +
                                      str(ingredient[2]) + ")")
 
+    def submit(self):
+        """
+        Closes the dialog graciously.
+        """
+        self.done(1)
+
     def __init__(self, parent, ingredients):
         """
         Initializes the window and its UI components, as well as the array
@@ -144,7 +150,11 @@ class IngredientsWindow(QDialog):
 
         # Initialize the button signals
         self.addIngredientButton.clicked.connect(self.add_ingredient)
+        self.saveChangesButton.clicked.connect(self.submit)
 
         # Set the ingredients in this window to the one that was passed by
         # the parent window
         self.ingredients = ingredients
+
+        # Initialize the list
+        self.initialize_list()

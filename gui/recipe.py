@@ -62,7 +62,7 @@ class RecipeWindow(QDialog):
         as viewing and editing.
         """
         editIngredientsWindow = IngredientsWindow(self, 
-                                                   self.recipe.ingredients)
+                                                  self.recipe.ingredients)
         editIngredientsWindow.exec_() # Execute the dialog
         # Get the ingredients from the dialog
         self.recipe.ingredients = editIngredientsWindow.get_ingredients()
