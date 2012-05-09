@@ -21,8 +21,8 @@ class IngredientEdit(QDialog):
         Returns the ingredient to the array of ingredients in the parent
         window
         """
-        ingredient = (self.nameData.text(), self.quantityData.value(),
-                      self.unitData.text())
+        ingredient = [self.nameData.text(), self.quantityData.value(),
+                      self.unitData.text()]
 
         return ingredient
 
@@ -76,14 +76,15 @@ class IngredientsWindow(QDialog):
         """
         return self.ingredients
 
-    def refresh_list(self):
+    def initialize_list(self):
         """
-        Refreshes the listview of ingredients by referring to the list of
+        Initializes the listview of ingredients by referring to the list of
         ingredients inside the dialog.
         """
+        # Clear the 
         for item in self.ingredients:
             self.ingredientsList.addItem(str(item[0]) + " - (" + str(item[1]) +
-                                         str(item[2]) + ")")
+                                         " " + str(item[2]) + ")")
 
     def add_ingredient(self):
         """
@@ -92,8 +93,11 @@ class IngredientsWindow(QDialog):
         """
         ingredientEditDialog = IngredientEdit(self)
         ingredientEditDialog.exec_() # Execute the dialog
+        ingredient = ingredientEditDialog.get_ingredient()
         self.ingredients.append(ingredientEditDialog.get_ingredient())
-        self.refresh_list()
+        self.ingredientsList.addItem(str(ingredient[0]) + " - (" +
+                                     str(ingredient[1]) + " " +
+                                     str(ingredient[2]) + ")")
 
     def __init__(self, parent, ingredients):
         """
