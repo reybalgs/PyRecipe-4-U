@@ -28,16 +28,14 @@ app = QApplication(sys.argv)
 class MainWindow(QWidget):
     # The main window class, inherits QWidget
     
-    def transform_add_button(self):
+    def enable_buttons(self):
         """
-        Transforms the Add Recipe button into an Edit Recipe button whenever an
-        item is selected in the list.
-
-        Also modifies the "edit_selected" variable to reflect that the system
-        is ready to edit a recipe.
+        Enables the Edit and Delete selected recipes buttons, two buttons that
+        are disabled on startup because they require an item in the list to be
+        selected before they can work.
         """
-        self.addRecipeButton.setText("Edit Recipe")
-        self.edit_selected = 1
+        self.editRecipeButton.setEnabled(True)
+        self.deleteRecipeButton.setEnabled(True)
 
     def add_recipe(self):
         """
@@ -46,7 +44,6 @@ class MainWindow(QWidget):
 
         Invokes an Add Recipe dialog, then catches its return value.
         """
-        # TODO: Add actual processing of values here
         # Create a Recipe model to be passed to the dialog to be invoked
         recipe = RecipeModel() # create a recipe model
         addRecipeDialog = AddRecipeWindow(self)
@@ -94,11 +91,15 @@ class MainWindow(QWidget):
 
         # Add recipe button
         self.addRecipeButton = QPushButton("Add Recipe", self)
+        # Edit recipe button
+        self.editRecipeButton = QPushButton("Edit Selected Recipe", self)
         # Delete recipe button
-        self.deleteRecipeButton = QPushButton("Delete Recipe", self)
+        self.deleteRecipeButton = QPushButton("Delete Selected Recipe", self)
         # We have to grey it out by default first because no recipe is
         # selected yet.
         self.deleteRecipeButton.setEnabled(False)
+        # Same goes with the edit recipe button
+        self.editRecipeButton.setEnabled(False)
         # Import Recipe button
         self.importRecipeButton = QPushButton("Import Recipes", self)
         # Export Recipe button
@@ -133,6 +134,7 @@ class MainWindow(QWidget):
         self.rightHandLayout.addStretch()
         # Add the three buttons into the layout
         self.rightHandLayout.addWidget(self.addRecipeButton)
+        self.rightHandLayout.addWidget(self.editRecipeButton)
         self.rightHandLayout.addWidget(self.deleteRecipeButton)
         self.rightHandLayout.addWidget(self.importRecipeButton)
         self.rightHandLayout.addWidget(self.exportRecipeButton)
@@ -140,6 +142,8 @@ class MainWindow(QWidget):
 
         # Initialize the buttons signals and slots
         self.addRecipeButton.clicked.connect(self.add_recipe)
+        # Signal for when an item is clicked in the shinylist
+        self.recipeList.clicked.connect(self.enable_buttons)
 
         self.show() # Show the window
 
