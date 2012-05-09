@@ -99,6 +99,10 @@ class MainWindow(QWidget):
         # We have to grey it out by default first because no recipe is
         # selected yet.
         self.deleteRecipeButton.setEnabled(False)
+        # Import Recipe button
+        self.importRecipeButton = QPushButton("Import Recipes", self)
+        # Export Recipe button
+        self.exportRecipeButton = QPushButton("Export Recipe", self)
         # Generate Shopping List button
         self.generateShoppingListButton = QPushButton("Generate Shopping List",
                                                        self)
@@ -130,6 +134,8 @@ class MainWindow(QWidget):
         # Add the three buttons into the layout
         self.rightHandLayout.addWidget(self.addRecipeButton)
         self.rightHandLayout.addWidget(self.deleteRecipeButton)
+        self.rightHandLayout.addWidget(self.importRecipeButton)
+        self.rightHandLayout.addWidget(self.exportRecipeButton)
         self.rightHandLayout.addWidget(self.generateShoppingListButton)
 
         # Initialize the buttons signals and slots
