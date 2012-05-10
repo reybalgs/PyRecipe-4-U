@@ -81,7 +81,9 @@ class IngredientsWindow(QDialog):
         Initializes the listview of ingredients by referring to the list of
         ingredients inside the dialog.
         """
-        # Clear the 
+        # Clear the list
+        self.ingredientsList.clear()
+
         for item in self.ingredients:
             self.ingredientsList.addItem(str(item[0]) + " - (" + str(item[1]) +
                                          " " + str(item[2]) + ")")
@@ -114,7 +116,6 @@ class IngredientsWindow(QDialog):
 
         # Main layout
         self.mainLayout = QVBoxLayout()
-        # Signal for when an item is clicked in the shinylist
 
         self.headerLabel = QLabel("Ingredients")
 

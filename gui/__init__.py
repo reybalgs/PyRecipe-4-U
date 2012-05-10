@@ -1,1 +1,1 @@
-__all__ = ['mainwindow', 'shinylist', 'recipe', 'ingredients']
+__all__ = ['mainwindow', 'shinylist', 'recipe', 'ingredients', 'instructions']

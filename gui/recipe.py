@@ -20,6 +20,9 @@ from models.recipemodel import *
 # Ingredients window import
 from ingredients import *
 
+# Instructions window import
+from instructions import *
+
 import sys
 
 class RecipeWindow(QDialog):
@@ -66,7 +69,18 @@ class RecipeWindow(QDialog):
         editIngredientsWindow.exec_() # Execute the dialog
         # Get the ingredients from the dialog
         self.recipe.ingredients = editIngredientsWindow.get_ingredients()
-        
+    
+    def edit_instructions(self):
+        """
+        Invokes a window that handles all the operations on a recipe's list
+        of instructions such as viewing and editing.
+        """
+        editInstructionsWindow = InstructionsWindow(self,
+                                                    self.recipe.instructions)
+        editInstructionsWindow.exec_() # Execute the dialog
+        # Get the instructions from the dialog
+        self.recipe.instructions = editInstructionsWindow.get_instructions()
+
 
     def get_recipe(self):
         """
@@ -116,6 +130,7 @@ class RecipeWindow(QDialog):
         """
         self.submitButton.clicked.connect(self.submit)
         self.ingredientsButton.clicked.connect(self.edit_ingredients)
+        self.instructionsButton.clicked.connect(self.edit_instructions)
 
 
 class AddRecipeWindow(RecipeWindow):
