@@ -21,10 +21,10 @@ class IngredientEdit(QDialog):
         Returns the ingredient to the array of ingredients in the parent
         window
         """
-        ingredient = [self.nameData.text(), self.quantityData.value(),
+        self.ingredient = [self.nameData.text(), self.quantityData.value(),
                       self.unitData.text()]
 
-        return ingredient
+        return self.ingredient
 
     def submit(self):
         """
@@ -32,11 +32,27 @@ class IngredientEdit(QDialog):
         """
         self.done(1)
 
-    def __init__(self, parent, ingredient = ()):
+    def refresh_data(self):
+        """
+        Refreshes the fields using the passed ingredient.
+        """
+        self.nameData.setText(self.ingredient[0])
+        self.quantityData.setValue(self.ingredient[1])
+        self.unitData.setText(self.ingredient[2])
+
+    def __init__(self, parent, ingredient = []):
         """
         Initializes the window and its UI components.
         """
         super(IngredientEdit, self).__init__(parent)
+
+        # initialize the ingredient to be edited
+        self.ingredient = ingredient
+
+        # If the list is empty (len 0), then this is a new ingredient, create
+        # some dummy values
+        if len(self.ingredient) == 0:
+            self.ingredient = ['', 0.0, '']
 
         # Main Layout
         self.mainLayout = QVBoxLayout()
@@ -64,6 +80,8 @@ class IngredientEdit(QDialog):
         self.formLayout.addRow("Unit:", self.unitData)
         self.mainLayout.addWidget(self.saveButton)
 
+        # Refresh the fields, in case we're editing or something
+        self.refresh_data()
 
 class IngredientsWindow(QDialog):
     """
@@ -96,10 +114,27 @@ class IngredientsWindow(QDialog):
         ingredientEditDialog = IngredientEdit(self)
         ingredientEditDialog.exec_() # Execute the dialog
         ingredient = ingredientEditDialog.get_ingredient()
-        self.ingredients.append(ingredientEditDialog.get_ingredient())
+        self.ingredients.append(ingredient)
         self.ingredientsList.addItem(str(ingredient[0]) + " - (" +
                                      str(ingredient[1]) + " " +
                                      str(ingredient[2]) + ")")
+
+    def edit_ingredient(self):
+        """
+        Edits the currently selected ingredient from the visible list of
+        ingredients.
+        """
+        # Get the index of the ingredient selected
+        index = self.ingredientsList.currentRow()
+
+        # Create an editing dialog and pass the selected ingredient to it
+        ingredientEditDialog = IngredientEdit(self, self.ingredients[index])
+        ingredientEditDialog.exec_() # execute the dialog
+        # Retreive the edited ingredient from the dialog
+        self.ingredients[index] = ingredientEditDialog.get_ingredient()
+
+        # Reinitialize the list
+        self.initialize_list()
 
     def submit(self):
         """
@@ -152,6 +187,9 @@ class IngredientsWindow(QDialog):
         # Initialize the button signals
         self.addIngredientButton.clicked.connect(self.add_ingredient)
         self.saveChangesButton.clicked.connect(self.submit)
+        # For editing instructions
+        self.ingredientsList.doubleClicked.connect(self.edit_ingredient)
+        self.editIngredientButton.clicked.connect(self.edit_ingredient)
 
         # Set the ingredients in this window to the one that was passed by
         # the parent window
