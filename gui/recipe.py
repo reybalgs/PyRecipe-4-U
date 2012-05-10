@@ -85,7 +85,7 @@ class RecipeWindow(QDialog):
         self.recipe.servingSize = self.servingSizeData.value()
 
         print 'Form submitted!'
-        self.done(0)
+        self.done(1)
 
     def init_layout(self):
         """

@@ -37,6 +37,9 @@ class MainWindow(QWidget):
         self.editRecipeButton.setEnabled(True)
         self.deleteRecipeButton.setEnabled(True)
 
+        # Debug - print out index of current item in list
+        print 'Selected: Index ' + str(self.recipeList.currentIndex().row())
+
     def add_recipe(self):
         """
         Function that is called whenever the 'Add Recipe' button in the main
@@ -62,12 +65,27 @@ class MainWindow(QWidget):
         self.recipeList.add_item(item)
         print 'Item added to shinylist'
 
+        # Add the item to the list of shinylist items
+        self.shinyListItems.append(item)
+
         # Add the recipe to the list of recipes
         self.recipes.append(recipe)
         # Some debugging messages
         print 'Recipe ' + recipe.name + ' added to list of recipes'
         print('Name: ' + recipe.name + ' ' + 'Course: ' + recipe.course + ' '
               + 'Serving Size: ' + ' ' + str(recipe.servingSize))
+
+    def refresh_list(self):
+        """
+        Deletes the entire shinylist and then repopulates it using the list
+        of shinylist items.
+        """
+        # Clear the entire shinylist
+        self.recipeList.clear()
+
+        # Repopulate the shinylist
+        for item in self.shinyListItems:
+            self.recipeList.add_item(item)
 
     def edit_recipe(self):
         """
@@ -86,13 +104,22 @@ class MainWindow(QWidget):
 
         # Create a dialog and pass the selected recipe to it
         editRecipeDialog = EditRecipeWindow(self, recipe)
-        editRecipeDialog.exec_() # execute the dialog
+        if (editRecipeDialog.exec_()): # Exec the dialog
+            # User pushed submit button
 
-        # Get the recipe from the dialog
-        recipe = editRecipeDialog.get_recipe()
+            # Get the recipe from the dialog
+            recipe = editRecipeDialog.get_recipe()
 
-        # Update the recipe in the list with the new one
-        self.recipes[recipeIndex.row()] = recipe
+            # Update the recipe in the list with the new one
+            self.recipes[recipeIndex.row()] = recipe
+
+            # Update the shinylist item
+            self.shinyListItems[recipeIndex.row()].set_main_text(recipe.name)
+            self.shinyListItems[recipeIndex.row()].set_sub_text(recipe.course +
+                    ', serves ' + str(recipe.servingSize))
+
+            # Refreshes the list
+            self.refresh_list()
         
 
     def init_ui(self):
@@ -200,5 +227,7 @@ class MainWindow(QWidget):
 
         self.init_ui() # Initialize the ui
 
-        # Create an array of recipes
+        # Create list of recipes
         self.recipes = []
+        # Create a list of shinylist items
+        self.shinyListItems = []
