@@ -28,6 +28,21 @@ app = QApplication(sys.argv)
 class MainWindow(QWidget):
     # The main window class, inherits QWidget
     
+    def update_overview(self):
+        """
+        Updates the overview information (the data shown on the right hand
+        side on top of the buttons) with the currently selected item on the
+        list.
+        """
+        # Get the index of the currently selected item
+        index = (self.recipeList.currentIndex()).row()
+
+        # Update the values
+        self.nameData.setText(self.recipes[index].name)
+        self.courseData.setText(self.recipes[index].course)
+        self.servingSizeData.setText(str(self.recipes[index].servingSize))
+
+
     def enable_buttons(self):
         """
         Enables the Edit and Delete selected recipes buttons, two buttons that
@@ -204,6 +219,7 @@ class MainWindow(QWidget):
         self.addRecipeButton.clicked.connect(self.add_recipe)
         # Signal for when an item is clicked in the shinylist
         self.recipeList.clicked.connect(self.enable_buttons)
+        self.recipeList.clicked.connect(self.update_overview)
         # Signal when an item is double-clicked
         self.recipeList.doubleClicked.connect(self.edit_recipe)
         # Signal to edit a recipe when the edit recipe button is clicked
