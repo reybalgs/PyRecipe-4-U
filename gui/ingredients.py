@@ -149,6 +149,24 @@ class IngredientsWindow(QDialog):
         self.editIngredientButton.setEnabled(False)
         self.deleteIngredientButton.setEnabled(False)
 
+    def delete_ingredient(self):
+        """
+        Deletes an ingredient both from the list of ingredients and the visible
+        list of ingredients.
+        """
+        # Get the index of the selected ingredient
+        index = self.ingredientsList.currentRow()
+
+        # Remove the ingredient from the list of ingredients
+        self.ingredients.pop(index)
+        # Refresh the visible list of ingredients
+        self.initialize_list()
+
+        # Disable the edit and delete ingredient buttons again to "fool" the
+        # user that their selection was reset
+        self.editIngredientButton.setEnabled(False)
+        self.deleteIngredientButton.setEnabled(False)
+
     def submit(self):
         """
         Closes the dialog graciously.
@@ -204,9 +222,11 @@ class IngredientsWindow(QDialog):
         # Initialize the button signals
         self.addIngredientButton.clicked.connect(self.add_ingredient)
         self.saveChangesButton.clicked.connect(self.submit)
-        # For editing instructions
+        # For editing ingredients
         self.ingredientsList.doubleClicked.connect(self.edit_ingredient)
         self.editIngredientButton.clicked.connect(self.edit_ingredient)
+        # For deleting ingredients
+        self.deleteIngredientButton.clicked.connect(self.delete_ingredient)
         # Enable the edit and delete ingredient buttons once an item has been
         # clicked or selected in the visible list
         self.ingredientsList.itemClicked.connect(self.enable_buttons)
