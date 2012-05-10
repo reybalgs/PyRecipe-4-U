@@ -111,6 +111,18 @@ class ShinyListItem(QStandardItem):
         """
         self.setData(icon, ShinyListDelegate.IconRole)
 
+    def get_main_text(self):
+        """
+        Returns the main text of the shinylist item.
+        """
+        return self.data(ShinyListDelegate.HeaderTextRole)
+
+    def get_sub_text(self):
+        """
+        Returns the sub text of the shinylist item.
+        """
+        return self.data(ShinyListDelegate.HeaderTextRole)
+
 
 class ShinyList(QListView):
     """

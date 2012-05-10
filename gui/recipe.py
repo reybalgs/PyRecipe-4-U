@@ -140,7 +140,7 @@ class EditRecipeWindow(RecipeWindow):
     Window dialog that is called whenever we need to add a recipe into the
     system
     """
-    def __init__(self, parent):
+    def __init__(self, parent, recipe):
         super(EditRecipeWindow, self).__init__(parent)
 
         # Change some of the names of the elements
@@ -150,3 +150,6 @@ class EditRecipeWindow(RecipeWindow):
         self.init_layout()
         # Initialize signals
         self.init_signals()
+
+        # Initialize the recipe to be edited
+        self.recipe = recipe

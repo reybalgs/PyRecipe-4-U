@@ -62,6 +62,35 @@ class MainWindow(QWidget):
         self.recipeList.add_item(item)
         print 'Item added to shinylist'
 
+        # Add the recipe to the list of recipes
+        self.recipes.append(recipe)
+
+    def edit_recipe(self):
+        """
+        A function that is called whenever the 'Edit Recipe' button in the
+        main screen has been called, or an item is double clicked from the
+        list.
+        """
+        # Create a recipe model
+        recipe = RecipeModel()
+
+        # Get the index of the recipe currently selected
+        recipeIndex = self.recipeList.currentIndex()
+
+        # Use the index to get the recipe from the list of recipes
+        recipe = self.recipes[recipeIndex.row()]
+
+        # Create a dialog and pass the selected recipe to it
+        editRecipeDialog = EditRecipeWindow(self, recipe)
+        editRecipeDialog.exec_() # execute the dialog
+
+        # Get the recipe from the dialog
+        recipe = editRecipeDialog.get_recipe()
+
+        # Update the recipe in the list with the new one
+        self.recipes[recipeIndex.row()] = recipe
+        
+
     def init_ui(self):
         """
         Function that initializes the UI components of the app.
@@ -144,6 +173,10 @@ class MainWindow(QWidget):
         self.addRecipeButton.clicked.connect(self.add_recipe)
         # Signal for when an item is clicked in the shinylist
         self.recipeList.clicked.connect(self.enable_buttons)
+        # Signal when an item is double-clicked
+        self.recipeList.doubleClicked.connect(self.edit_recipe)
+        # Signal to edit a recipe when the edit recipe button is clicked
+        self.editRecipeButton.clicked.connect(self.edit_recipe)
 
         self.show() # Show the window
 
@@ -162,3 +195,6 @@ class MainWindow(QWidget):
         print 'Initializing UI...' # some debug messages
 
         self.init_ui() # Initialize the ui
+
+        # Create an array of recipes
+        self.recipes = []
