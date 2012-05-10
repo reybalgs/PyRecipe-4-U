@@ -24,9 +24,9 @@ class InstructionEdit(QDialog):
         window
         """
         # Get the value from the text edit
-        instruction = self.instructionData.toPlainText()
+        self.instruction = self.instructionData.toPlainText()
         # Return the instruction
-        return instruction
+        return self.instruction
 
     def submit(self):
         """
@@ -41,11 +41,20 @@ class InstructionEdit(QDialog):
         """
         super(InstructionEdit, self).__init__(parent)
 
+        # the instruction to be edited
+        self.instruction = instruction
+
+        # If instruction is empty, this is probably a new instruction, so create
+        # a dummy value
+        if len(self.instruction) == 0:
+            self.instruction = ''
+
         # Main layout
         self.mainLayout = QVBoxLayout()
         
         # Edit box
         self.instructionData = QTextEdit()
+        self.instructionData.setText(self.instruction)
 
         # Save button
         self.saveButton = QPushButton("Save")
@@ -68,6 +77,14 @@ class InstructionsWindow(QDialog):
         Closes the dialog graciously.
         """
         self.done(1)
+
+    def enable_buttons(self):
+        """
+        Enables the Edit and Delete instruction buttons. Called whenever an
+        item is selected in the visible instructions list.
+        """
+        self.editInstructionButton.setEnabled(True)
+        self.deleteInstructionButton.setEnabled(True)
 
     def initialize_list(self):
         """
@@ -96,6 +113,27 @@ class InstructionsWindow(QDialog):
         self.instructions.append(instruction)
         # Refresh the list
         self.initialize_list()
+
+    def edit_instruction(self):
+        """
+        Edits the currently selected instruction from the visible list of
+        instructions.
+        """
+        # Get the index of the instruction selected
+        index = self.instructionsList.currentRow()
+
+        # Pass the selected instruction to an editing dialog
+        instructionEditDialog = InstructionEdit(self, self.instructions[index])
+        instructionEditDialog.exec_() # execute the dialog
+        # Retreive the edited instruction from the dialog
+        self.instructions[index] = instructionEditDialog.get_instruction()
+
+        # Reinitialize the list
+        self.initialize_list()
+
+        # Disable the edit and delete instruction buttons
+        self.editInstructionButton.setEnabled(False)
+        self.deleteInstructionButton.setEnabled(False)
 
     def __init__(self, parent, instructions):
         """
@@ -146,6 +184,15 @@ class InstructionsWindow(QDialog):
         # Connect the signals to appropriate functions
         self.addInstructionButton.clicked.connect(self.add_instruction)
         self.saveChangesButton.clicked.connect(self.submit)
+        # Edit functions
+        self.instructionsList.doubleClicked.connect(self.edit_instruction)
+        self.editInstructionButton.clicked.connect(self.edit_instruction)
+        # Disable the edit and delete buttons first so that the user will be
+        # encouraged to select an item first
+        self.editInstructionButton.setEnabled(False)
+        self.deleteInstructionButton.setEnabled(False)
+        # Connect list to a function that enables them
+        self.instructionsList.itemClicked.connect(self.enable_buttons)
 
         # Initialize the list of instructions
         self.initialize_list()
