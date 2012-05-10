@@ -140,6 +140,32 @@ class EditRecipeWindow(RecipeWindow):
     Window dialog that is called whenever we need to add a recipe into the
     system
     """
+    def refresh_data(self):
+        """
+        Refreshes the data on the data fields. Ideally used at startup or
+        whenever changes were made
+        """
+        # Set the name data
+        self.nameData.setText(self.recipe.name)
+        
+        # Set the course data depending on the course given
+        if self.recipe.course == 'Appetizer':
+            self.courseData.setCurrentIndex(0)
+        elif self.recipe.course == 'Main':
+            self.courseData.setCurrentIndex(1)
+        elif self.recipe.course == 'Dessert':
+            self.courseData.setCurrentIndex(2)
+        else:
+            print 'Error! Wrong index/name of course!'
+
+        # Set the recipe's serving size data
+        self.servingSizeData.setValue(self.recipe.servingSize)
+
+        # Some debug messages
+        print 'Window refreshed!'
+
+
+
     def __init__(self, parent, recipe):
         super(EditRecipeWindow, self).__init__(parent)
 
@@ -153,3 +179,6 @@ class EditRecipeWindow(RecipeWindow):
 
         # Initialize the recipe to be edited
         self.recipe = recipe
+
+        # Refresh the data fields to reflect the current recipe data
+        self.refresh_data()

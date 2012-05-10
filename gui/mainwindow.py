@@ -64,6 +64,10 @@ class MainWindow(QWidget):
 
         # Add the recipe to the list of recipes
         self.recipes.append(recipe)
+        # Some debugging messages
+        print 'Recipe ' + recipe.name + ' added to list of recipes'
+        print('Name: ' + recipe.name + ' ' + 'Course: ' + recipe.course + ' '
+              + 'Serving Size: ' + ' ' + str(recipe.servingSize))
 
     def edit_recipe(self):
         """
