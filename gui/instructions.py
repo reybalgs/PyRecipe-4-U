@@ -135,6 +135,23 @@ class InstructionsWindow(QDialog):
         self.editInstructionButton.setEnabled(False)
         self.deleteInstructionButton.setEnabled(False)
 
+    def delete_instruction(self):
+        """
+        Deletes a selected instruction from both the list of instructions for
+        the recipe nad the visible list of instructions.
+        """
+        # Get the index of the currently selected instruction.
+        index = self.instructionsList.currentRow()
+
+        # Remove the instruction from the list of instructions
+        self.instructions.pop(index)
+        # Refresh the visible list of instructions
+        self.initialize_list()
+
+        # Disable the edit and delete buttons again
+        self.editInstructionButton.setEnabled(False)
+        self.deleteInstructionButton.setEnabled(False)
+
     def __init__(self, parent, instructions):
         """
         Initializes the window and its UI compoenents, as well as the array
@@ -187,6 +204,8 @@ class InstructionsWindow(QDialog):
         # Edit functions
         self.instructionsList.doubleClicked.connect(self.edit_instruction)
         self.editInstructionButton.clicked.connect(self.edit_instruction)
+        # Delete functions
+        self.deleteInstructionButton.clicked.connect(self.delete_instruction)
         # Disable the edit and delete buttons first so that the user will be
         # encouraged to select an item first
         self.editInstructionButton.setEnabled(False)
