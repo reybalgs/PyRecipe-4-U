@@ -135,6 +135,11 @@ class MainWindow(QWidget):
 
             # Refreshes the list
             self.refresh_list()
+
+            # Disable the edit and delete recipe buttons again to "fool" the
+            # user that their selection has been reset
+            self.editRecipeButton.setEnabled(False)
+            self.deleteRecipeButton.setEnabled(False)
         
 
     def init_ui(self):

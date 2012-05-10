@@ -94,6 +94,14 @@ class IngredientsWindow(QDialog):
         """
         return self.ingredients
 
+    def enable_buttons(self):
+        """
+        Enables the Edit and Delete ingredient buttons once the user has
+        selected an item in the visible list.
+        """
+        self.editIngredientButton.setEnabled(True)
+        self.deleteIngredientButton.setEnabled(True)
+
     def initialize_list(self):
         """
         Initializes the listview of ingredients by referring to the list of
@@ -136,6 +144,11 @@ class IngredientsWindow(QDialog):
         # Reinitialize the list
         self.initialize_list()
 
+        # Disable the edit and delete ingredient buttons again to "fool" the
+        # user that their selection was reset
+        self.editIngredientButton.setEnabled(False)
+        self.deleteIngredientButton.setEnabled(False)
+
     def submit(self):
         """
         Closes the dialog graciously.
@@ -167,9 +180,13 @@ class IngredientsWindow(QDialog):
 
         # Edit ingredient button
         self.editIngredientButton = QPushButton("Edit Ingredient")
+        # Make it disabled first until the user selects an ingredient
+        self.editIngredientButton.setEnabled(False)
 
         # Delete ingredient button
         self.deleteIngredientButton = QPushButton("Delete Ingredient")
+        # Give it properties similar to the edit ingredient button
+        self.deleteIngredientButton.setEnabled(False)
 
         # Save changes button
         self.saveChangesButton = QPushButton("Save Changes")
@@ -190,6 +207,9 @@ class IngredientsWindow(QDialog):
         # For editing instructions
         self.ingredientsList.doubleClicked.connect(self.edit_ingredient)
         self.editIngredientButton.clicked.connect(self.edit_ingredient)
+        # Enable the edit and delete ingredient buttons once an item has been
+        # clicked or selected in the visible list
+        self.ingredientsList.itemClicked.connect(self.enable_buttons)
 
         # Set the ingredients in this window to the one that was passed by
         # the parent window
