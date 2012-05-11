@@ -238,6 +238,8 @@ class InstructionsWindow(QDialog):
 
         # The listwidget of instructions
         self.instructionsList = QListWidget()
+        # Make the list word wrap enabled
+        self.instructionsList.setWordWrap(True)
 
         # A handy label with helpful instructions
         self.helpLabel = QLabel("Click an Instruction above on the list to" +
