@@ -82,9 +82,79 @@ class InstructionsWindow(QDialog):
         """
         Enables the Edit and Delete instruction buttons. Called whenever an
         item is selected in the visible instructions list.
+
+        Update: Now also affects the MoveUp and MoveDown buttons
         """
         self.editInstructionButton.setEnabled(True)
         self.deleteInstructionButton.setEnabled(True)
+        self.moveUpButton.setEnabled(True)
+        self.moveDownButton.setEnabled(True)
+
+    def disable_buttons(self):
+        """
+        Disables the Edit, Delete, MoveUp and MoveDown buttons. Called whenever
+        an item was just modified or moved in the list.
+        """
+        self.editInstructionButton.setEnabled(False)
+        self.deleteInstructionButton.setEnabled(False)
+        self.moveUpButton.setEnabled(False)
+        self.moveDownButton.setEnabled(False)
+
+    def move_instruction_up(self):
+        """
+        Moves an instruction up both lists of instructions. If the instruction
+        is the first instruction in the list, do not do anything.
+        """
+        # Get the index of the currently selected instruction.
+        index = self.instructionsList.currentRow()
+
+        if index == 0:
+            # Item selected is first, don't do anything
+            print 'Item is already at top!'
+        else:
+            # Item can be moved up
+            # Store the instruction in a temporary variable first
+            instruction = self.instructions[index]
+            # Pop the last location of the instruction
+            self.instructions.pop(index)
+            # Put the instruction behind the item that was last behind it
+            self.instructions.insert(index - 1, instruction)
+            # Move the current row to the instruction's new position
+            self.instructionsList.setCurrentRow(index - 1)
+
+            # Reinitialize the list
+            self.initialize_list()
+
+            # Disable the buttons
+            self.disable_buttons()
+
+    def move_instruction_down(self):
+        """
+        Moves an instruction down both lists of instructions. If the instruction
+        is at the bottom of the list, do not do anything.
+        """
+        # Get the index of the currently selected instruction.
+        index = self.instructionsList.currentRow()
+
+        if index == len(self.instructions):
+            # Item selected is the last, don't do anything
+            print 'Item is already at bottom!'
+        else:
+            # Item can be moved down
+            # Store the instruction in a temporary variable first
+            instruction = self.instructions[index]
+            # Pop the last location of the instructon
+            self.instructions.pop(index)
+            # Put the instruction after the item that was last in front of it
+            self.instructions.insert(index + 1, instruction)
+            # Move the current row to the instruction's new position
+            self.instructionsList.setCurrentRow(index + 1)
+
+            # Reinitialize the list
+            self.initialize_list()
+
+            # Disable the edit and delete buttons
+            self.disable_buttons()
 
     def initialize_list(self):
         """
@@ -132,8 +202,7 @@ class InstructionsWindow(QDialog):
         self.initialize_list()
 
         # Disable the edit and delete instruction buttons
-        self.editInstructionButton.setEnabled(False)
-        self.deleteInstructionButton.setEnabled(False)
+        self.disable_buttons()
 
     def delete_instruction(self):
         """
@@ -149,8 +218,7 @@ class InstructionsWindow(QDialog):
         self.initialize_list()
 
         # Disable the edit and delete buttons again
-        self.editInstructionButton.setEnabled(False)
-        self.deleteInstructionButton.setEnabled(False)
+        self.disable_buttons()
 
     def __init__(self, parent, instructions):
         """
@@ -161,6 +229,10 @@ class InstructionsWindow(QDialog):
 
         # Main layout
         self.mainLayout = QVBoxLayout()
+        # Split layout for move buttons and list
+        self.splitLayout = QHBoxLayout()
+        # Layout for move up/down buttons
+        self.moveButtonLayout = QVBoxLayout()
         
         self.headerLabel = QLabel("Recipe Instructions")
 
@@ -171,6 +243,10 @@ class InstructionsWindow(QDialog):
         self.helpLabel = QLabel("Click an Instruction above on the list to" +
                 " edit it.\nClicking Add Instruction will add a new instruction"
                 + " to the list.")
+
+        # Move instruction buttons
+        self.moveUpButton = QPushButton("MoveUp")
+        self.moveDownButton = QPushButton("MoveDn")
 
         # Add Instruction button
         self.addInstructionButton = QPushButton("Add Instruction")
@@ -187,7 +263,11 @@ class InstructionsWindow(QDialog):
         # Arrange the UI elements into a layout
         self.setLayout(self.mainLayout)
         self.mainLayout.addWidget(self.headerLabel)
-        self.mainLayout.addWidget(self.instructionsList)
+        self.mainLayout.addLayout(self.splitLayout)
+        self.splitLayout.addWidget(self.instructionsList)
+        self.splitLayout.addLayout(self.moveButtonLayout)
+        self.moveButtonLayout.addWidget(self.moveUpButton)
+        self.moveButtonLayout.addWidget(self.moveDownButton)
         self.mainLayout.addWidget(self.helpLabel)
         self.mainLayout.addWidget(self.addInstructionButton)
         self.mainLayout.addWidget(self.editInstructionButton)
@@ -206,10 +286,12 @@ class InstructionsWindow(QDialog):
         self.editInstructionButton.clicked.connect(self.edit_instruction)
         # Delete functions
         self.deleteInstructionButton.clicked.connect(self.delete_instruction)
+        # Moving instructions in the list functions
+        self.moveUpButton.clicked.connect(self.move_instruction_up)
+        self.moveDownButton.clicked.connect(self.move_instruction_down)
         # Disable the edit and delete buttons first so that the user will be
         # encouraged to select an item first
-        self.editInstructionButton.setEnabled(False)
-        self.deleteInstructionButton.setEnabled(False)
+        self.disable_buttons()
         # Connect list to a function that enables them
         self.instructionsList.itemClicked.connect(self.enable_buttons)
 
