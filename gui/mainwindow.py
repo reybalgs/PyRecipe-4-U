@@ -2,8 +2,8 @@
 #
 # mainwindow.py
 #
-# The mainwindow of the GUI. The GUI will probably only have one window anyway,
-# for minimalism.
+# The mainwindow of the GUI. Displays overview recipe information, plus other
+# functionalities.
 #
 ###############################################################################
 
@@ -169,6 +169,14 @@ class MainWindow(QWidget):
         # where the serving size data is displayed
         self.servingSizeData = QLabel("Select recipe from list first")
 
+        # Overview of ingredients
+        self.ingredientsOverviewLabel = QLabel("Ingredients Overview")
+        self.ingredientsOverviewList = QListWidget()
+
+        # Overview of instructions
+        self.instructionsOverviewLabel = QLabel("Instructions Overview")
+        self.instructionsOverviewList = QListWidget()
+
         # Add recipe button
         self.addRecipeButton = QPushButton("Add Recipe", self)
         # Edit recipe button
@@ -209,6 +217,13 @@ class MainWindow(QWidget):
         self.recipeOverviewLayout.addRow("Name:", self.nameData)
         self.recipeOverviewLayout.addRow("Course:", self.courseData)
         self.recipeOverviewLayout.addRow("Serving Size:", self.servingSizeData)
+
+        # Add the overview of the ingredients and instructions for the
+        # selected recipe
+        self.rightHandLayout.addWidget(self.ingredientsOverviewLabel)
+        self.rightHandLayout.addWidget(self.ingredientsOverviewList)
+        self.rightHandLayout.addWidget(self.instructionsOverviewLabel)
+        self.rightHandLayout.addWidget(self.instructionsOverviewList)
 
         # Add a stretching spacer to separate the overview and the buttons
         self.rightHandLayout.addStretch()
