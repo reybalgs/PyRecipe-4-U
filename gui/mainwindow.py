@@ -55,6 +55,44 @@ class MainWindow(QWidget):
         # Debug - print out index of current item in list
         print 'Selected: Index ' + str(self.recipeList.currentIndex().row())
 
+    def show_ingredient_overview(self):
+        """
+        Shows an overview of ingredients in a listwidget in the right hand
+        side of the main layout.
+        """
+        # First we need to find the index of the first item in the list
+        index = (self.recipeList.currentIndex()).row()
+
+        # Remove all the current items in the list first
+        self.ingredientsOverviewList.clear()
+
+        # Show the ingredients of that recipe on the list.
+        for ingredient in self.recipes[index].ingredients:
+            # Loop through the list of ingredients for that recipe
+            self.ingredientsOverviewList.addItem(str(ingredient[0]) + " - (" +
+                    str(ingredient[1]) + " " + str(ingredient[2]) + ")")
+
+    def show_instruction_overview(self):
+        """
+        Shows an overview of instructions in a listwidget in the right hand side
+        of the main layout.
+        """
+        # Find the first item in the list
+        index = (self.recipeList.currentIndex()).row()
+
+        # Remove all the current items in the list first
+        self.instructionsOverviewList.clear()
+
+        # Create a counter variable
+        counter = 1
+
+        # Show the instructions of that recipe on the list
+        for instruction in self.recipes[index].instructions:
+            # Loop through the list of instructions for that recipe
+            self.instructionsOverviewList.addItem(str(counter) + ". " +
+                    instruction)
+            counter += 1
+
     def add_recipe(self):
         """
         Function that is called whenever the 'Add Recipe' button in the main
@@ -240,6 +278,8 @@ class MainWindow(QWidget):
         # Signal for when an item is clicked in the shinylist
         self.recipeList.clicked.connect(self.enable_buttons)
         self.recipeList.clicked.connect(self.update_overview)
+        self.recipeList.clicked.connect(self.show_ingredient_overview)
+        self.recipeList.clicked.connect(self.show_instruction_overview)
         # Signal when an item is double-clicked
         self.recipeList.doubleClicked.connect(self.edit_recipe)
         # Signal to edit a recipe when the edit recipe button is clicked
