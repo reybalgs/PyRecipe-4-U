@@ -140,6 +140,28 @@ class MainWindow(QWidget):
         for item in self.shinyListItems:
             self.recipeList.add_item(item)
 
+    def delete_recipe(self):
+        """
+        The function that is in charge of deleting recipes from the
+        application's list of recipes. Once a recipe is deleted, it is
+        irreversible, unless the user has exported that recipe previously.
+        """
+        # First we get the index of the recipe we are going to delete
+        recipeIndex = (self.recipeList.currentIndex()).row()
+
+        # Delete that recipe from the list of recipes (non-visible list)
+        self.recipes.pop(recipeIndex)
+
+        # Delete that recipe from the list of recipes (shinylist)
+        self.shinyListItems.pop(recipeIndex)
+
+        # Reinitialize the list
+        self.refresh_list()
+
+        # Disable the delete and edit recipe buttons
+        self.editRecipeButton.setEnabled(False)
+        self.deleteRecipeButton.setEnabled(False)
+
     def edit_recipe(self):
         """
         A function that is called whenever the 'Edit Recipe' button in the
@@ -284,6 +306,8 @@ class MainWindow(QWidget):
         self.recipeList.doubleClicked.connect(self.edit_recipe)
         # Signal to edit a recipe when the edit recipe button is clicked
         self.editRecipeButton.clicked.connect(self.edit_recipe)
+        # Signal to delete a recipe when the delete recipe button is clicked
+        self.deleteRecipeButton.clicked.connect(self.delete_recipe)
 
         self.show() # Show the window
 
