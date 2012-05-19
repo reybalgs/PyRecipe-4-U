@@ -22,6 +22,9 @@ from models.recipemodel import *
 # Recipe dialogs import
 from recipe import *
 
+# Generate shopping list dialog import
+from shopping_list import *
+
 # Qt App declaration
 app = QApplication(sys.argv)
 
@@ -42,6 +45,19 @@ class MainWindow(QWidget):
         self.courseData.setText(self.recipes[index].course)
         self.servingSizeData.setText(str(self.recipes[index].servingSize))
 
+    def generate_shopping_list(self):
+        """
+        Invokes the dialog that generates a shopping list for the user.
+        """
+        # Get the index of the selected recipe
+        index = (self.recipeList.currentIndex()).row()
+        # Get the recipe based on that index
+        recipe = self.recipes[index]
+
+        # Create a shopping list dialog and pass the recipe to it
+        generateShoppingListDialog = ShoppingListDialog(self, recipe)
+        # Execute the dialog
+        generateShoppingListDialog.exec_()
 
     def enable_buttons(self):
         """
@@ -308,6 +324,10 @@ class MainWindow(QWidget):
         self.editRecipeButton.clicked.connect(self.edit_recipe)
         # Signal to delete a recipe when the delete recipe button is clicked
         self.deleteRecipeButton.clicked.connect(self.delete_recipe)
+        # Signal to invoke the shopping list dialog when the generate shopping
+        # list button is clicked
+        self.generateShoppingListButton.clicked.connect(
+                self.generate_shopping_list)
 
         self.show() # Show the window
 
