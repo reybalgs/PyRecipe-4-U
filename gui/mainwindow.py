@@ -191,8 +191,8 @@ class MainWindow(QWidget):
         recipe.servingSize = float(raw_recipe[2]['serving_size'])
         # Set the ingredients of the recipe
         for ingredient in raw_recipe[3]['ingredients']:
-            recipe.ingredients.append([ingredient[0]['name'],
-                ingredient[1]['quantity'], ingredient[2]['unit']])
+            recipe.ingredients.append([ingredient[0], ingredient[1], 
+                                       ingredient[2]])
 
         # Set the instructions of the recipe
         for instruction in raw_recipe[4]['instructions']:
@@ -213,6 +213,49 @@ class MainWindow(QWidget):
 
         # Add the recipe to the list of recipes
         self.recipes.append(recipe)
+
+        # Close the file
+        file.close()
+
+    def export_recipe(self):
+        """
+        Exports the selected recipe in the list as a recipe file (.rcpe).
+        """
+        # Get the index of the current recipe selected
+        index = (self.recipeList.currentIndex()).row()
+
+        # Get the recipe from the list of recipes using that index
+        recipe = self.recipes[index]
+
+        # Encode the recipe into a JSON string
+        json_recipe = json.dumps([{"name":recipe.name},
+            {"course":recipe.course}, {"serving_size":recipe.servingSize},
+            {"ingredients":recipe.ingredients},
+            {"instructions":recipe.instructions}])
+
+        # Create a filedialog for saving the file
+        fileDialog = QFileDialog(self)
+        fileDialog.setAcceptMode(QFileDialog.AcceptSave)
+        fileDialog.setFileMode(QFileDialog.AnyFile)
+        fileDialog.setNameFilter("Recipe File(*.rcpe)")
+
+        # Execute the dialog
+        if fileDialog.exec_():
+            filePath = fileDialog.selectedFiles()
+
+        # Open the file for writing
+        file = open(filePath[0], 'w')
+
+        # Write the JSON string into the file
+        file.write(json_recipe)
+
+        # Close the file
+        file.close()
+
+        # Open the file again for reading
+        file = open(filePath[0], 'r')
+        print file.read()
+        file.close()
 
     def refresh_list(self):
         """
@@ -392,6 +435,8 @@ class MainWindow(QWidget):
         self.deleteRecipeButton.clicked.connect(self.delete_recipe)
         # Signal to import a recipe
         self.importRecipeButton.clicked.connect(self.import_recipe)
+        # Signal to export a recipe
+        self.exportRecipeButton.clicked.connect(self.export_recipe)
         # Signal to invoke the shopping list dialog when the generate shopping
         # list button is clicked
         self.generateShoppingListButton.clicked.connect(
