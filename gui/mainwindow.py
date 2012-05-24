@@ -64,12 +64,26 @@ class MainWindow(QWidget):
         Enables the Edit and Delete selected recipes buttons, two buttons that
         are disabled on startup because they require an item in the list to be
         selected before they can work.
+
+        Now also enables the Export Recipe button, because that also depends
+        on a recipe being selected first.
         """
         self.editRecipeButton.setEnabled(True)
         self.deleteRecipeButton.setEnabled(True)
+        self.exportRecipeButton.setEnabled(True)
+        self.generateShoppingListButton.setEnabled(True)
 
         # Debug - print out index of current item in list
         print 'Selected: Index ' + str(self.recipeList.currentIndex().row())
+
+    def disable_buttons(self):
+        """
+        Does the exact opposite of the function enable_buttons().
+        """
+        self.editRecipeButton.setEnabled(False)
+        self.deleteRecipeButton.setEnabled(False)
+        self.exportRecipeButton.setEnabled(False)
+        self.generateShoppingListButton.setEnabled(False)
 
     def show_ingredient_overview(self):
         """
@@ -174,9 +188,8 @@ class MainWindow(QWidget):
         # Reinitialize the list
         self.refresh_list()
 
-        # Disable the delete and edit recipe buttons
-        self.editRecipeButton.setEnabled(False)
-        self.deleteRecipeButton.setEnabled(False)
+        # Disable the buttons that have to be disabled
+        self.disable_buttons()
 
     def edit_recipe(self):
         """
@@ -214,9 +227,7 @@ class MainWindow(QWidget):
 
             # Disable the edit and delete recipe buttons again to "fool" the
             # user that their selection has been reset
-            self.editRecipeButton.setEnabled(False)
-            self.deleteRecipeButton.setEnabled(False)
-        
+            self.disable_buttons()
 
     def init_ui(self):
         """
@@ -259,18 +270,17 @@ class MainWindow(QWidget):
         self.editRecipeButton = QPushButton("Edit Selected Recipe", self)
         # Delete recipe button
         self.deleteRecipeButton = QPushButton("Delete Selected Recipe", self)
-        # We have to grey it out by default first because no recipe is
-        # selected yet.
-        self.deleteRecipeButton.setEnabled(False)
-        # Same goes with the edit recipe button
-        self.editRecipeButton.setEnabled(False)
         # Import Recipe button
         self.importRecipeButton = QPushButton("Import Recipes", self)
         # Export Recipe button
-        self.exportRecipeButton = QPushButton("Export Recipe", self)
+        self.exportRecipeButton = QPushButton("Export Selected Recipe", self)
         # Generate Shopping List button
         self.generateShoppingListButton = QPushButton("Generate Shopping List",
                                                        self)
+
+        # Disable the edit, delete, generate shopping list and export recipe
+        # buttons because no recipe has been selected yet
+        self.disable_buttons()
 
         # Layouting
         # Time to link together the different UI components
