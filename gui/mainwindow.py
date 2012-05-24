@@ -444,8 +444,7 @@ class MainWindow(QWidget):
                 self.generate_shopping_list)
 
         # Set the window title
-        self.setWindowTitle("PyRecipe-4-U: The best recipe management " +
-                "app no money can buy")
+        self.setWindowTitle("PyRecipe-4-U")
         self.show() # Show the window
 
 
