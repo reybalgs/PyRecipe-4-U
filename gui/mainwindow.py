@@ -8,6 +8,7 @@
 ###############################################################################
 
 import sys # for system calls we might need
+import simplejson as json # for JSON decoding and encoding
 
 # Pyside imports
 from PySide.QtCore import *
@@ -157,6 +158,61 @@ class MainWindow(QWidget):
         print 'Recipe ' + recipe.name + ' added to list of recipes'
         print('Name: ' + recipe.name + ' ' + 'Course: ' + recipe.course + ' '
               + 'Serving Size: ' + ' ' + str(recipe.servingSize))
+
+    def import_recipe(self):
+        """
+        Imports a recipe file (.rcpe) from a directory in the user's filesystem
+        and then adds it to the current list of recipes.
+        """
+        # Create a recipe object
+        recipe = RecipeModel()
+        # Invoke a filedialog that will look for the .rcpe file
+        fileDialog = QFileDialog(self)
+        fileDialog.setFileMode(QFileDialog.ExistingFile)
+        fileDialog.setNameFilter("Recipe File(*.rcpe)")
+        
+        # An empty file location
+        file = None
+        if fileDialog.exec_():
+            filePath = fileDialog.selectedFiles()
+            print filePath
+
+        # Read from the filepath
+        file = open(filePath[0], 'r')
+
+        # Create a "raw" recipe object from the file
+        raw_recipe = json.loads(file.read())
+
+        # Set the name of the recipe
+        recipe.name = raw_recipe[0]['name']
+        # Set the course of the recipe
+        recipe.course = raw_recipe[1]['course']
+        # Set the serving size of the recipe
+        recipe.servingSize = float(raw_recipe[2]['serving_size'])
+        # Set the ingredients of the recipe
+        for ingredient in raw_recipe[3]['ingredients']:
+            recipe.ingredients.append([ingredient[0]['name'],
+                ingredient[1]['quantity'], ingredient[2]['unit']])
+
+        # Set the instructions of the recipe
+        for instruction in raw_recipe[4]['instructions']:
+            recipe.instructions.append(instruction)
+
+        # Create a shinylist item
+        item = ShinyListItem()
+
+        # Set the main and subtext of the shinylist item
+        item.set_main_text(recipe.name)
+        item.set_sub_text(recipe.course + ', serves ' +
+                          str(recipe.servingSize))
+
+        # Add the item to the shinylist
+        self.recipeList.add_item(item)
+        # and to the list of shinylist items as well
+        self.shinyListItems.append(item)
+
+        # Add the recipe to the list of recipes
+        self.recipes.append(recipe)
 
     def refresh_list(self):
         """
@@ -334,6 +390,8 @@ class MainWindow(QWidget):
         self.editRecipeButton.clicked.connect(self.edit_recipe)
         # Signal to delete a recipe when the delete recipe button is clicked
         self.deleteRecipeButton.clicked.connect(self.delete_recipe)
+        # Signal to import a recipe
+        self.importRecipeButton.clicked.connect(self.import_recipe)
         # Signal to invoke the shopping list dialog when the generate shopping
         # list button is clicked
         self.generateShoppingListButton.clicked.connect(
