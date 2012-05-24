@@ -238,6 +238,7 @@ class MainWindow(QWidget):
         fileDialog.setAcceptMode(QFileDialog.AcceptSave)
         fileDialog.setFileMode(QFileDialog.AnyFile)
         fileDialog.setNameFilter("Recipe File(*.rcpe)")
+        fileDialog.setDefaultSuffix("rcpe")
 
         # Execute the dialog
         if fileDialog.exec_():
