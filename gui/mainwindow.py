@@ -173,49 +173,52 @@ class MainWindow(QWidget):
         
         # An empty file location
         file = None
+        filePath = '' # Initialize an empty filepath
         if fileDialog.exec_():
             filePath = fileDialog.selectedFiles()
             print filePath
 
-        # Read from the filepath
-        file = open(filePath[0], 'r')
+        if (filePath):
+            # There is a file, so let's continue on
+            # Read from the filepath
+            file = open(filePath[0], 'r')
 
-        # Create a "raw" recipe object from the file
-        raw_recipe = json.loads(file.read())
+            # Create a "raw" recipe object from the file
+            raw_recipe = json.loads(file.read())
 
-        # Set the name of the recipe
-        recipe.name = raw_recipe[0]['name']
-        # Set the course of the recipe
-        recipe.course = raw_recipe[1]['course']
-        # Set the serving size of the recipe
-        recipe.servingSize = float(raw_recipe[2]['serving_size'])
-        # Set the ingredients of the recipe
-        for ingredient in raw_recipe[3]['ingredients']:
-            recipe.ingredients.append([ingredient[0], ingredient[1], 
-                                       ingredient[2]])
+            # Set the name of the recipe
+            recipe.name = raw_recipe[0]['name']
+            # Set the course of the recipe
+            recipe.course = raw_recipe[1]['course']
+            # Set the serving size of the recipe
+            recipe.servingSize = float(raw_recipe[2]['serving_size'])
+            # Set the ingredients of the recipe
+            for ingredient in raw_recipe[3]['ingredients']:
+                recipe.ingredients.append([ingredient[0], ingredient[1], 
+                                           ingredient[2]])
 
-        # Set the instructions of the recipe
-        for instruction in raw_recipe[4]['instructions']:
-            recipe.instructions.append(instruction)
+            # Set the instructions of the recipe
+            for instruction in raw_recipe[4]['instructions']:
+                recipe.instructions.append(instruction)
 
-        # Create a shinylist item
-        item = ShinyListItem()
+            # Create a shinylist item
+            item = ShinyListItem()
 
-        # Set the main and subtext of the shinylist item
-        item.set_main_text(recipe.name)
-        item.set_sub_text(recipe.course + ', serves ' +
-                          str(recipe.servingSize))
+            # Set the main and subtext of the shinylist item
+            item.set_main_text(recipe.name)
+            item.set_sub_text(recipe.course + ', serves ' +
+                              str(recipe.servingSize))
 
-        # Add the item to the shinylist
-        self.recipeList.add_item(item)
-        # and to the list of shinylist items as well
-        self.shinyListItems.append(item)
+            # Add the item to the shinylist
+            self.recipeList.add_item(item)
+            # and to the list of shinylist items as well
+            self.shinyListItems.append(item)
 
-        # Add the recipe to the list of recipes
-        self.recipes.append(recipe)
+            # Add the recipe to the list of recipes
+            self.recipes.append(recipe)
 
-        # Close the file
-        file.close()
+            # Close the file
+            file.close()
 
     def export_recipe(self):
         """
@@ -240,23 +243,27 @@ class MainWindow(QWidget):
         fileDialog.setNameFilter("Recipe File(*.rcpe)")
         fileDialog.setDefaultSuffix("rcpe")
 
+        # Initialize an empty file path
+        filePath = ''
         # Execute the dialog
         if fileDialog.exec_():
             filePath = fileDialog.selectedFiles()
 
-        # Open the file for writing
-        file = open(filePath[0], 'w')
+        if (filePath):
+            # There's a valid filepath, so let's continue
+            # Open the file for writing
+            file = open(filePath[0], 'w')
 
-        # Write the JSON string into the file
-        file.write(json_recipe)
+            # Write the JSON string into the file
+            file.write(json_recipe)
 
-        # Close the file
-        file.close()
+            # Close the file
+            file.close()
 
-        # Open the file again for reading
-        file = open(filePath[0], 'r')
-        print file.read()
-        file.close()
+            # Open the file again for reading
+            file = open(filePath[0], 'r')
+            print file.read()
+            file.close()
 
     def refresh_list(self):
         """
