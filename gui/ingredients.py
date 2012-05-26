@@ -11,6 +11,9 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 
+# Import the error dialog
+from errordialog import *
+
 class IngredientEdit(QDialog):
     """
     A smaller dialog that contains the form data that allows the user to
@@ -30,7 +33,17 @@ class IngredientEdit(QDialog):
         """
         Submits the data. Or rather, just closes the dialog in a neat fashion
         """
-        self.done(1)
+        if not (self.nameData.text() == '' or self.quantityData.value() == 0.0
+            or self.unitData.text() == ''):
+                # No missing data, so carry on
+                self.done(1)
+        else:
+            # There are missing data, invoke the error dialog
+            errorDialog = ErrorDialog(self, 'ingredient')
+            errorDialog.exec_()
+            if (errorDialog.get_flag()):
+                # The user wants to discard
+                self.done(1)
 
     def refresh_data(self):
         """
@@ -122,10 +135,12 @@ class IngredientsWindow(QDialog):
         ingredientEditDialog = IngredientEdit(self)
         ingredientEditDialog.exec_() # Execute the dialog
         ingredient = ingredientEditDialog.get_ingredient()
-        self.ingredients.append(ingredient)
-        self.ingredientsList.addItem(str(ingredient[0]) + " - (" +
-                                     str(ingredient[1]) + " " +
-                                     str(ingredient[2]) + ")")
+        if not (ingredient[0] == '' or ingredient[1] == 0.0 or
+                ingredient[2] == ''):
+                    self.ingredients.append(ingredient)
+                    self.ingredientsList.addItem(str(ingredient[0]) + " - (" +
+                                                 str(ingredient[1]) + " " +
+                                                 str(ingredient[2]) + ")")
 
     def edit_ingredient(self):
         """
@@ -171,7 +186,7 @@ class IngredientsWindow(QDialog):
         """
         Closes the dialog graciously.
         """
-        self.done(1)
+        self.done(1)        
 
     def __init__(self, parent, ingredients):
         """
