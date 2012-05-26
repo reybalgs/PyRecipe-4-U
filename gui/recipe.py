@@ -23,71 +23,10 @@ from ingredients import *
 # Instructions window import
 from instructions import *
 
+# Error dialog import
+from errordialog import *
+
 import sys
-
-class RecipeErrorDialog(QDialog):
-    """
-    The class of the dialog that pops up whenever the user attempts to submit
-    a recipe that has missing information.
-
-    This does not pop-up when the user prompts to cancel the form (close the
-    dialog)
-    """
-    def get_flag(self):
-        """Returns whether the user wanted to go back to edit or discard."""
-        return self.discard
-
-    def discard_recipe(self):
-        """Raises the flag that the user wanted to discard the recipe."""
-        self.discard = 1
-        self.done(1)
-
-    def go_back(self):
-        """
-        Takes the user back to editing the recipe by letting the dialog close
-        and put the user back to the recipe edit screen.
-        """
-        self.done(1) # Just close the dialog
-
-    def init_ui(self):
-        # Creation
-        self.mainLayout = QVBoxLayout()
-        self.text = QLabel()
-        self.buttonLayout = QHBoxLayout()
-        self.backButton = QPushButton("Go Back")
-        self.discardButton = QPushButton("Discard")
-
-        text = ("Your recipe has missing information on it! You cannot submit" +
-                " a recipe that has missing information. Click Go Back to go" +
-                " back to the recipe and insert the missing information, or" +
-                " click Discard to discard the current recipe and go back to" +
-                " the main screen.")
-
-        self.text.setText(text)
-        self.text.setWordWrap(True)
-
-        # Layouting
-        self.setLayout(self.mainLayout)
-        self.mainLayout.addWidget(self.text)
-        self.buttonLayout.addWidget(self.backButton)
-        self.buttonLayout.addWidget(self.discardButton)
-        self.mainLayout.addLayout(self.buttonLayout)
-
-        # Signals
-        self.backButton.clicked.connect(self.go_back)
-        self.discardButton.clicked.connect(self.discard_recipe)
-
-    def __init__(self, parent):
-        super(RecipeErrorDialog, self).__init__(parent)
-        
-        # Set the window title of the dialog
-        self.setWindowTitle("Hold it!")
-
-        # A flag that determines whether the user wants to edit the recipe
-        # again or just discard the recipe
-        self.discard = 0
-
-        self.init_ui()
 
 class RecipeWindow(QDialog):
     """
@@ -167,7 +106,7 @@ class RecipeWindow(QDialog):
             self.done(1)
         else:
             # Something is missing, raise the error dialog
-            errorDialog = RecipeErrorDialog(self)
+            errorDialog = ErrorDialog(self, 'recipe')
             errorDialog.exec_() # execute the dialog
             if (errorDialog.get_flag() == 1):
                 # User wanted to just discard the recipe

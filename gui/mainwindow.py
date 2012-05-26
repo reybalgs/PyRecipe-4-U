@@ -137,7 +137,8 @@ class MainWindow(QWidget):
         addRecipeDialog.exec_() # execute the dialog
         recipe = addRecipeDialog.get_recipe() # get the recipe from the dialog
 
-        if not (recipe.name == 'noname' and recipe.servingSize == 0.0):
+        if not ((recipe.name == 'noname' or recipe.name == '') and 
+                recipe.servingSize == 0.0):
             # We got a proper recipe, carry on
             # Create a ShinyList item
             item = ShinyListItem()
