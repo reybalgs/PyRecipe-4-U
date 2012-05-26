@@ -137,27 +137,25 @@ class MainWindow(QWidget):
         addRecipeDialog.exec_() # execute the dialog
         recipe = addRecipeDialog.get_recipe() # get the recipe from the dialog
 
-        # Create a ShinyList item
-        item = ShinyListItem()
+        if not (recipe.name == 'noname' and recipe.servingSize == 0.0):
+            # We got a proper recipe, carry on
+            # Create a ShinyList item
+            item = ShinyListItem()
 
-        # Set shinylist text
-        item.set_main_text(str(recipe.name))
-        item.set_sub_text(recipe.course + ', serves ' +
-                          str(recipe.servingSize))
+            # Set shinylist text
+            item.set_main_text(str(recipe.name))
+            item.set_sub_text(recipe.course + ', serves ' +
+                              str(recipe.servingSize))
 
-        # Add the item to the shinylist
-        self.recipeList.add_item(item)
-        print 'Item added to shinylist'
+            # Add the item to the shinylist
+            self.recipeList.add_item(item)
+            print 'Item added to shinylist'
 
-        # Add the item to the list of shinylist items
-        self.shinyListItems.append(item)
+            # Add the item to the list of shinylist items
+            self.shinyListItems.append(item)
 
-        # Add the recipe to the list of recipes
-        self.recipes.append(recipe)
-        # Some debugging messages
-        print 'Recipe ' + recipe.name + ' added to list of recipes'
-        print('Name: ' + recipe.name + ' ' + 'Course: ' + recipe.course + ' '
-              + 'Serving Size: ' + ' ' + str(recipe.servingSize))
+            # Add the recipe to the list of recipes
+            self.recipes.append(recipe)
 
     def import_recipe(self):
         """
