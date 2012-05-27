@@ -11,6 +11,9 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 
+# Import the error message
+from errordialog import *
+
 import sys
 
 class InstructionEdit(QDialog):
@@ -32,7 +35,16 @@ class InstructionEdit(QDialog):
         """
         Exits the dialog in a neat fashion.
         """
-        self.done(1)
+        if not self.instructionData.toPlainText() == '':
+            # We have data, carry on
+            self.done(1)
+        else:
+            # The user didn't input an instruction
+            errorDialog = ErrorDialog(self, 'instruction')
+            errorDialog.exec_() # Display the dialog
+            if errorDialog.get_flag():
+                # The user just wants to discard the instruction
+                self.done(1)
 
     def __init__(self, parent, instruction = []):
         """
@@ -179,10 +191,12 @@ class InstructionsWindow(QDialog):
         instructionEditDialog = InstructionEdit(self)
         instructionEditDialog.exec_() # execute the dialog
         instruction = instructionEditDialog.get_instruction()
-        # Add the instruction to the list of instructions
-        self.instructions.append(instruction)
-        # Refresh the list
-        self.initialize_list()
+        if not instruction == '':
+            # We have a proper non-empty instruction so let's move on
+            # Add the instruction to the list of instructions
+            self.instructions.append(instruction)
+            # Refresh the list
+            self.initialize_list()
 
     def edit_instruction(self):
         """

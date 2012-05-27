@@ -40,6 +40,9 @@ class ErrorDialog(QDialog):
         self.done(1)
 
     def init_ui(self):
+        # Set the window title
+        self.setWindowTitle("Hold it!")
+
         # Creation
         self.mainLayout = QVBoxLayout()
         self.text = QLabel()
@@ -54,7 +57,7 @@ class ErrorDialog(QDialog):
         elif self.dialog_type == 'ingredient':
             text = (text + "Your ingredient has missing information on it!")
         elif self.dialog_type == 'instruction':
-            text = (text + "Your instruction has missing information on it!")
+            text = (text + "You did not input an instruction, try again!")
         else:
             # This isn't supposed to happen
             print 'ERROR! Wrong dialog type passed to ErrorDialog'
