@@ -3,3 +3,6 @@
 
 # ignore Python output leftovers
 *.pyc
+
+# Ignore the wiki, it has its own repo
+PyRecipe-4-U.wiki/
