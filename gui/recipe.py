@@ -102,22 +102,28 @@ class RecipeWindow(QDialog):
     """
     def __init__(self, parent):
         super(RecipeWindow, self).__init__(parent)
-        self.windowTitle = QLabel("Add/Edit Recipe")
-
+        
         # Form stuff
         self.mainLayout = QVBoxLayout()
         self.formLayout = QFormLayout()
         self.buttonLayout = QHBoxLayout()
         # Name
         self.nameData = QLineEdit()
+        # Tooltip for the name data
+        self.nameData.setToolTip("The name of your recipe.")
         # Course
         self.courseData = QComboBox()
+        # Tooltip for the course data
+        self.courseData.setToolTip("The course of your recipe.")
         # Adding items to the course combobox
         self.courseData.addItem("Appetizer")
         self.courseData.addItem("Main")
         self.courseData.addItem("Dessert")
         # Serving Size
         self.servingSizeData = QDoubleSpinBox()
+        # Tooltip for the serving size data
+        self.servingSizeData.setToolTip("How many people your recipe can " +
+                "serve")
 
         # Buttons
         self.ingredientsButton = QPushButton("Ingredients")
@@ -180,7 +186,6 @@ class RecipeWindow(QDialog):
         """
         Initializes the layout of the dialog. Usually called by its subclasses.
         """
-        self.mainLayout.addWidget(self.windowTitle)
         self.mainLayout.addLayout(self.formLayout)
 
         # Initialize the form
@@ -217,7 +222,7 @@ class AddRecipeWindow(RecipeWindow):
         super(AddRecipeWindow, self).__init__(parent)
 
         # Change some of the names of the elements
-        self.windowTitle.setText("Add Recipe")
+        self.setWindowTitle("Add Recipe")
 
         # Initialize the layout
         self.init_layout()
@@ -260,7 +265,7 @@ class EditRecipeWindow(RecipeWindow):
         super(EditRecipeWindow, self).__init__(parent)
 
         # Change some of the names of the elements
-        self.windowTitle.setText("Edit Recipe")
+        self.setWindowTitle("Edit " + recipe.name)
 
         # Initialize the layout
         self.init_layout()
