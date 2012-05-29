@@ -34,9 +34,45 @@ class RecipeOverview(QDialog):
     not actually edit the recipe, but has buttons that lead to editing
     functionalities.
     """
+    def edit_recipe_info(self):
+        """Edits the essential data of the recipe in view"""
+        # Create an edit recipe dialog
+        editRecipeDialog = EditRecipeWindow(self, self.recipe)
+
+        # Execute the dialog
+        editRecipeDialog.exec_()
+
+        # Return the recipe from the dialog
+        self.recipe = editRecipeDialog.get_recipe()
+        
+    def edit_ingredients(self):
+        """Edits the ingredients of the recipe in view"""
+        # Create an ingredients dialog
+        ingredientsDialog = IngredientsWindow(self, self.recipe.ingredients)
+
+        # Execute the dialog
+        ingredientsDialog.exec_()
+
+        # Get the updated list of ingredients from the dialog
+        self.recipe.ingredients = ingredientsDialog.get_ingredients()
+
+    def edit_instructions(self):
+        """Edits the instructions of the recipe in view"""
+        # Create an instructions dialog
+        instructionsDialog = InstructionsWindow(self,
+                self.recipe.instructions)
+
+        # Execute the dialog
+        instructionsDialog.exec_()
+
+        # Get the updated list of instructions from the dialog
+        self.recipe.instructions = instructionsDialog.get_instructions()
+
     def init_signals(self):
         """Initializes the signals of the buttons in the dialog"""
-        # TODO: Actually put something here
+        self.editRecipeButton.clicked.connect(self.edit_recipe_info)
+        self.editIngredientsButton.clicked.connect(self.edit_ingredients)
+        self.editInstructionsButton.clicked.connect(self.edit_instructions)
 
     def init_ui(self):
         """Initializes the UI of the dialog"""
@@ -47,9 +83,21 @@ class RecipeOverview(QDialog):
         self.nameData = QLabel(self.recipe.name)
         self.courseData = QLabel(self.recipe.course)
         self.servingSizeData = QLabel(str(self.recipe.servingSize) + " people")
+        
+        # Button to edit the recipe's essential information
+        self.editRecipeButton = QPushButton("Edit Recipe Information")
+        self.editRecipeButton.setToolTip("Edit this recipe's vital " +
+                "information (name, course, serving size)")
 
         self.ingredientData = QTextBrowser()
+        self.editIngredientsButton = QPushButton("Edit Ingredients")
+        self.editIngredientsButton.setToolTip("Edit the ingredients for " +
+                "this recipe.")
+
         self.instructionData = QTextBrowser()
+        self.editInstructionsButton = QPushButton("Edit Instructions")
+        self.editInstructionsButton.setToolTip("Edit the instructions for " +
+                "this recipe.")
 
         counter = 1 # A counter variable
 
@@ -81,8 +129,11 @@ class RecipeOverview(QDialog):
         self.formLayout.addRow("<b>Name:</b>", self.nameData)
         self.formLayout.addRow("<b>Course:</b>", self.courseData)
         self.formLayout.addRow("<b>Serving Size:</b>", self.servingSizeData)
+        self.formLayout.addRow("", self.editRecipeButton)
         self.formLayout.addRow("<b>Ingredients:</b>", self.ingredientData)
+        self.formLayout.addRow("", self.editIngredientsButton)
         self.formLayout.addRow("<b>Instructions:</b>", self.instructionData)
+        self.formLayout.addRow("", self.editInstructionsButton)
 
     def __init__(self, parent, recipe):
         super(RecipeOverview, self).__init__(parent)
@@ -126,33 +177,9 @@ class RecipeWindow(QDialog):
                 "serve")
 
         # Buttons
-        self.ingredientsButton = QPushButton("Ingredients")
-        self.instructionsButton = QPushButton("Instructions")
         self.submitButton = QPushButton("Submit")
 
         self.recipe = RecipeModel() # Create a model
-
-    def edit_ingredients(self):
-        """
-        Invokes a window that handles all the operations on ingredients such
-        as viewing and editing.
-        """
-        editIngredientsWindow = IngredientsWindow(self, 
-                                                  self.recipe.ingredients)
-        editIngredientsWindow.exec_() # Execute the dialog
-        # Get the ingredients from the dialog
-        self.recipe.ingredients = editIngredientsWindow.get_ingredients()
-
-    def edit_instructions(self):
-        """
-        Invokes a window that handles all the operations on a recipe's list
-        of instructions such as viewing and editing.
-        """
-        editInstructionsWindow = InstructionsWindow(self,
-                                                    self.recipe.instructions)
-        editInstructionsWindow.exec_() # Execute the dialog
-        # Get the instructions from the dialog
-        self.recipe.instructions = editInstructionsWindow.get_instructions()
 
     def get_recipe(self):
         """
@@ -195,8 +222,6 @@ class RecipeWindow(QDialog):
 
         # Add the instructions and ingredients buttons
         self.mainLayout.addLayout(self.buttonLayout)
-        self.buttonLayout.addWidget(self.ingredientsButton)
-        self.buttonLayout.addWidget(self.instructionsButton)
 
         # Add the submit button
         self.mainLayout.addWidget(self.submitButton)
@@ -209,9 +234,6 @@ class RecipeWindow(QDialog):
         Initializes the signal of the submit button
         """
         self.submitButton.clicked.connect(self.submit)
-        self.ingredientsButton.clicked.connect(self.edit_ingredients)
-        self.instructionsButton.clicked.connect(self.edit_instructions)
-
 
 class AddRecipeWindow(RecipeWindow):
     """
