@@ -31,35 +31,6 @@ app = QApplication(sys.argv)
 
 class MainWindow(QWidget):
     # The main window class, inherits QWidget
-    
-    def update_overview(self):
-        """
-        Updates the overview information (the data shown on the right hand
-        side on top of the buttons) with the currently selected item on the
-        list.
-        """
-        # Get the index of the currently selected item
-        index = (self.recipeList.currentIndex()).row()
-
-        # Update the values
-        self.nameData.setText(self.recipes[index].name)
-        self.courseData.setText(self.recipes[index].course)
-        self.servingSizeData.setText(str(self.recipes[index].servingSize))
-
-    def generate_shopping_list(self):
-        """
-        Invokes the dialog that generates a shopping list for the user.
-        """
-        # Get the index of the selected recipe
-        index = (self.recipeList.currentIndex()).row()
-        # Get the recipe based on that index
-        recipe = self.recipes[index]
-
-        # Create a shopping list dialog and pass the recipe to it
-        generateShoppingListDialog = ShoppingListDialog(self, recipe)
-        # Execute the dialog
-        generateShoppingListDialog.exec_()
-
     def enable_buttons(self):
         """
         Enables the Edit and Delete selected recipes buttons, two buttons that
@@ -69,60 +40,15 @@ class MainWindow(QWidget):
         Now also enables the Export Recipe button, because that also depends
         on a recipe being selected first.
         """
-        self.editRecipeButton.setEnabled(True)
         self.deleteRecipeButton.setEnabled(True)
         self.exportRecipeButton.setEnabled(True)
-        self.generateShoppingListButton.setEnabled(True)
-
-        # Debug - print out index of current item in list
-        print 'Selected: Index ' + str(self.recipeList.currentIndex().row())
 
     def disable_buttons(self):
         """
         Does the exact opposite of the function enable_buttons().
         """
-        self.editRecipeButton.setEnabled(False)
         self.deleteRecipeButton.setEnabled(False)
         self.exportRecipeButton.setEnabled(False)
-        self.generateShoppingListButton.setEnabled(False)
-
-    def show_ingredient_overview(self):
-        """
-        Shows an overview of ingredients in a listwidget in the right hand
-        side of the main layout.
-        """
-        # First we need to find the index of the first item in the list
-        index = (self.recipeList.currentIndex()).row()
-
-        # Remove all the current items in the list first
-        self.ingredientsOverviewList.clear()
-
-        # Show the ingredients of that recipe on the list.
-        for ingredient in self.recipes[index].ingredients:
-            # Loop through the list of ingredients for that recipe
-            self.ingredientsOverviewList.addItem(str(ingredient[0]) + " - (" +
-                    str(ingredient[1]) + " " + str(ingredient[2]) + ")")
-
-    def show_instruction_overview(self):
-        """
-        Shows an overview of instructions in a listwidget in the right hand side
-        of the main layout.
-        """
-        # Find the first item in the list
-        index = (self.recipeList.currentIndex()).row()
-
-        # Remove all the current items in the list first
-        self.instructionsOverviewList.clear()
-
-        # Create a counter variable
-        counter = 1
-
-        # Show the instructions of that recipe on the list
-        for instruction in self.recipes[index].instructions:
-            # Loop through the list of instructions for that recipe
-            self.instructionsOverviewList.addItem(str(counter) + ". " +
-                    instruction)
-            counter += 1
 
     def add_recipe(self):
         """
@@ -313,44 +239,6 @@ class MainWindow(QWidget):
         # Disable the buttons that have to be disabled
         self.disable_buttons()
 
-    def edit_recipe(self):
-        """
-        A function that is called whenever the 'Edit Recipe' button in the
-        main screen has been called, or an item is double clicked from the
-        list.
-        """
-        # Create a recipe model
-        recipe = RecipeModel()
-
-        # Get the index of the recipe currently selected
-        recipeIndex = self.recipeList.currentIndex()
-
-        # Use the index to get the recipe from the list of recipes
-        recipe = self.recipes[recipeIndex.row()]
-
-        # Create a dialog and pass the selected recipe to it
-        editRecipeDialog = EditRecipeWindow(self, recipe)
-        if (editRecipeDialog.exec_()): # Exec the dialog
-            # User pushed submit button
-
-            # Get the recipe from the dialog
-            recipe = editRecipeDialog.get_recipe()
-
-            # Update the recipe in the list with the new one
-            self.recipes[recipeIndex.row()] = recipe
-
-            # Update the shinylist item
-            self.shinyListItems[recipeIndex.row()].set_main_text(recipe.name)
-            self.shinyListItems[recipeIndex.row()].set_sub_text(recipe.course +
-                    ', serves ' + str(recipe.servingSize))
-
-            # Refreshes the list
-            self.refresh_list()
-
-            # Disable the edit and delete recipe buttons again to "fool" the
-            # user that their selection has been reset
-            self.disable_buttons()
-
     def init_ui(self):
         """
         Function that initializes the UI components of the app.
@@ -360,45 +248,19 @@ class MainWindow(QWidget):
         # Creates UI components, but does not link them together yet.
 
         self.mainLayout = QVBoxLayout() # main layout
-        self.splitViewLayout = QHBoxLayout() # splitting layout
+        self.buttonLayout = QHBoxLayout() # hor layout for buttons
 
         # Create the shinylist
         self.recipeList = ShinyList()
 
-        self.recipeOverviewLayout = QFormLayout() # layout for recipe overview
-        self.rightHandLayout = QVBoxLayout() # layout for the right hand side
-
-        # label above the recipeOverviewLayout
-        self.recipeOverviewTitle = QLabel("Recipe Information")
-        
-        # where name data is displayed
-        self.nameData = QLabel("Select recipe from list first")
-        # where the course data is displayed
-        self.courseData = QLabel("Select recipe from list first")
-        # where the serving size data is displayed
-        self.servingSizeData = QLabel("Select recipe from list first")
-
-        # Overview of ingredients
-        self.ingredientsOverviewLabel = QLabel("Ingredients Overview")
-        self.ingredientsOverviewList = QListWidget()
-
-        # Overview of instructions
-        self.instructionsOverviewLabel = QLabel("Instructions Overview")
-        self.instructionsOverviewList = QListWidget()
-
         # Add recipe button
-        self.addRecipeButton = QPushButton("Add Recipe", self)
-        # Edit recipe button
-        self.editRecipeButton = QPushButton("Edit Selected Recipe", self)
+        self.addRecipeButton = QPushButton("Add", self)
         # Delete recipe button
-        self.deleteRecipeButton = QPushButton("Delete Selected Recipe", self)
+        self.deleteRecipeButton = QPushButton("Delete", self)
         # Import Recipe button
-        self.importRecipeButton = QPushButton("Import Recipes", self)
+        self.importRecipeButton = QPushButton("Import", self)
         # Export Recipe button
-        self.exportRecipeButton = QPushButton("Export Selected Recipe", self)
-        # Generate Shopping List button
-        self.generateShoppingListButton = QPushButton("Generate Shopping List",
-                                                       self)
+        self.exportRecipeButton = QPushButton("Export", self)
 
         # Disable the edit, delete, generate shopping list and export recipe
         # buttons because no recipe has been selected yet
@@ -407,63 +269,31 @@ class MainWindow(QWidget):
         # Layouting
         # Time to link together the different UI components
         self.setLayout(self.mainLayout) # set the main layout
-        # Add the split view layout to the main layout
-        self.mainLayout.addLayout(self.splitViewLayout)
+
+        # Put the shinylist in the main layout
+        self.mainLayout.addWidget(self.recipeList)
+
+        # Put the button layout in the main layout
+        self.mainLayout.addLayout(self.buttonLayout)
+
+        # Put the buttons in the button layout
+        self.buttonLayout.addWidget(self.addRecipeButton)
+        self.buttonLayout.addWidget(self.deleteRecipeButton)
+        self.buttonLayout.addWidget(self.importRecipeButton)
+        self.buttonLayout.addWidget(self.exportRecipeButton)
         
-        # Add the table to the split layout, being the first, it's
-        # automatically put to the left.
-        self.splitViewLayout.addWidget(self.recipeList)
-        # Add the right hand layout to the split layout.
-        self.splitViewLayout.addLayout(self.rightHandLayout)
-        
-        # Add the Recipe Information label to the right hand layout.
-        self.rightHandLayout.addWidget(self.recipeOverviewTitle)
-        # Add the recipe overview form layout to the right hand layout.
-        self.rightHandLayout.addLayout(self.recipeOverviewLayout)
-
-        # Add the elements of the recipe overview form layout to itself
-        self.recipeOverviewLayout.addRow("Name:", self.nameData)
-        self.recipeOverviewLayout.addRow("Course:", self.courseData)
-        self.recipeOverviewLayout.addRow("Serving Size:", self.servingSizeData)
-
-        # Add the overview of the ingredients and instructions for the
-        # selected recipe
-        self.rightHandLayout.addWidget(self.ingredientsOverviewLabel)
-        self.rightHandLayout.addWidget(self.ingredientsOverviewList)
-        self.rightHandLayout.addWidget(self.instructionsOverviewLabel)
-        self.rightHandLayout.addWidget(self.instructionsOverviewList)
-
-        # Add a stretching spacer to separate the overview and the buttons
-        self.rightHandLayout.addStretch()
-        # Add the three buttons into the layout
-        self.rightHandLayout.addWidget(self.addRecipeButton)
-        self.rightHandLayout.addWidget(self.editRecipeButton)
-        self.rightHandLayout.addWidget(self.deleteRecipeButton)
-        self.rightHandLayout.addWidget(self.importRecipeButton)
-        self.rightHandLayout.addWidget(self.exportRecipeButton)
-        self.rightHandLayout.addWidget(self.generateShoppingListButton)
-
         # Initialize the buttons signals and slots
         self.addRecipeButton.clicked.connect(self.add_recipe)
         # Signal for when an item is clicked in the shinylist
         self.recipeList.clicked.connect(self.enable_buttons)
-        self.recipeList.clicked.connect(self.update_overview)
-        self.recipeList.clicked.connect(self.show_ingredient_overview)
-        self.recipeList.clicked.connect(self.show_instruction_overview)
         # Signal when an item is double-clicked
         self.recipeList.doubleClicked.connect(self.open_recipe)
-        # Signal to edit a recipe when the edit recipe button is clicked
-        self.editRecipeButton.clicked.connect(self.edit_recipe)
         # Signal to delete a recipe when the delete recipe button is clicked
         self.deleteRecipeButton.clicked.connect(self.delete_recipe)
         # Signal to import a recipe
         self.importRecipeButton.clicked.connect(self.import_recipe)
         # Signal to export a recipe
         self.exportRecipeButton.clicked.connect(self.export_recipe)
-        # Signal to invoke the shopping list dialog when the generate shopping
-        # list button is clicked
-        self.generateShoppingListButton.clicked.connect(
-                self.generate_shopping_list)
 
         # Set the window title
         self.setWindowTitle("PyRecipe-4-U")
