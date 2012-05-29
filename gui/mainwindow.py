@@ -252,15 +252,30 @@ class MainWindow(QWidget):
 
         # Create the shinylist
         self.recipeList = ShinyList()
+        # Tooltip for the shinylist
+        self.recipeList.setToolTip("Double-click a recipe to view and edit " +
+                "its contents.")
 
         # Add recipe button
         self.addRecipeButton = QPushButton("Add", self)
+        # Tooltip for add recipe
+        self.addRecipeButton.setToolTip("Create and add a new " +
+                "recipe into the database.")
         # Delete recipe button
         self.deleteRecipeButton = QPushButton("Delete", self)
+        # Tooltip for delete recipe
+        self.deleteRecipeButton.setToolTip("Deletes the selected " +
+                "recipe from the database.")
         # Import Recipe button
         self.importRecipeButton = QPushButton("Import", self)
+        # Tooltip for import recipe
+        self.importRecipeButton.setToolTip("Loads a .rcpe recipe " +
+                "file from your filesystem.")
         # Export Recipe button
         self.exportRecipeButton = QPushButton("Export", self)
+        # Tooltip for export recipe
+        self.exportRecipeButton.setToolTip("Saves the selected " +
+                "recipe to a .rcpe recipe file on your filesystem.")
 
         # Disable the edit, delete, generate shopping list and export recipe
         # buttons because no recipe has been selected yet
