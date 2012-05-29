@@ -28,6 +28,70 @@ from errordialog import *
 
 import sys
 
+class RecipeOverview(QDialog):
+    """
+    The class of the dialog that shows an overview of an entire recipe. Does
+    not actually edit the recipe, but has buttons that lead to editing
+    functionalities.
+    """
+    def init_signals(self):
+        """Initializes the signals of the buttons in the dialog"""
+        # TODO: Actually put something here
+
+    def init_ui(self):
+        """Initializes the UI of the dialog"""
+        # Element creation
+        self.mainLayout = QVBoxLayout()
+        self.formLayout = QFormLayout()
+        
+        self.nameData = QLabel(self.recipe.name)
+        self.courseData = QLabel(self.recipe.course)
+        self.servingSizeData = QLabel(str(self.recipe.servingSize) + " people")
+
+        self.ingredientData = QTextBrowser()
+        self.instructionData = QTextBrowser()
+
+        counter = 1 # A counter variable
+
+        # Put text in the ingredients list
+        for ingredient in self.recipe.ingredients:
+            # Go through the list of ingredients
+            self.ingredientData.insertPlainText(str(counter) + '. ' + 
+                    ingredient[0] + ': ' + str(ingredient[1]) + ' ' +
+                    ingredient[2] + '\n')
+            counter += 1
+
+        counter = 1
+        # Put text in the instructions list
+        for instruction in self.recipe.instructions:
+            # Go through the list of instructions
+            self.instructionData.insertPlainText(str(counter) + '. ' +
+                    instruction + '\n')
+            counter += 1
+
+        self.buttonLayout = QHBoxLayout()
+        self.editRecipeButton = QPushButton("Edit Recipe")
+        self.editIngredientsButton = QPushButton("Edit Ingredients")
+        self.editInstructionsButton = QPushButton("Edit Instructions")
+
+        # Layouting
+        self.setLayout(self.mainLayout)
+        self.mainLayout.addLayout(self.formLayout)
+
+        self.formLayout.addRow("<b>Name:</b>", self.nameData)
+        self.formLayout.addRow("<b>Course:</b>", self.courseData)
+        self.formLayout.addRow("<b>Serving Size:</b>", self.servingSizeData)
+        self.formLayout.addRow("<b>Ingredients:</b>", self.ingredientData)
+        self.formLayout.addRow("<b>Instructions:</b>", self.instructionData)
+
+    def __init__(self, parent, recipe):
+        super(RecipeOverview, self).__init__(parent)
+        self.recipe = recipe # Get the recipe passed
+        self.setWindowTitle("Overview for " + self.recipe.name)
+
+        self.init_ui()
+        self.init_signals()
+
 class RecipeWindow(QDialog):
     """
     The main class of all the windows that deal with the manipulation of

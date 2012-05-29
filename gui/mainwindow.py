@@ -264,6 +264,22 @@ class MainWindow(QWidget):
             print file.read()
             file.close()
 
+    def open_recipe(self):
+        """
+        Opens up a concise and detailed dialog containing essential
+        information about the double-clicked recipe.
+        """
+        # Get the index of the selected recipe
+        index = self.recipeList.currentIndex().row()
+
+        # Get the recipe based on that index
+        recipe = self.recipes[index]
+
+        # Create a recipe overview dialog, pass the recipe to it
+        recipeDialog = RecipeOverview(self, recipe)
+        # Execute that dialog
+        recipeDialog.exec_()
+
     def refresh_list(self):
         """
         Deletes the entire shinylist and then repopulates it using the list
@@ -435,7 +451,7 @@ class MainWindow(QWidget):
         self.recipeList.clicked.connect(self.show_ingredient_overview)
         self.recipeList.clicked.connect(self.show_instruction_overview)
         # Signal when an item is double-clicked
-        self.recipeList.doubleClicked.connect(self.edit_recipe)
+        self.recipeList.doubleClicked.connect(self.open_recipe)
         # Signal to edit a recipe when the edit recipe button is clicked
         self.editRecipeButton.clicked.connect(self.edit_recipe)
         # Signal to delete a recipe when the delete recipe button is clicked
