@@ -34,6 +34,19 @@ class RecipeOverview(QDialog):
     not actually edit the recipe, but has buttons that lead to editing
     functionalities.
     """
+    def get_recipe(self):
+        """Returns the recipe inside this dialog"""
+        return self.recipe
+
+    def refresh_recipe_info(self):
+        """
+        Refreshes the essential data of the recipe in view, usually done after
+        an edit.
+        """
+        self.nameData.setText(self.recipe.name)
+        self.courseData.setText(self.recipe.course)
+        self.servingSizeData.setText(str(self.recipe.servingSize))
+
     def edit_recipe_info(self):
         """Edits the essential data of the recipe in view"""
         # Create an edit recipe dialog
@@ -44,6 +57,9 @@ class RecipeOverview(QDialog):
 
         # Return the recipe from the dialog
         self.recipe = editRecipeDialog.get_recipe()
+
+        # Refresh the info displayed
+        self.refresh_recipe_info()
         
     def edit_ingredients(self):
         """Edits the ingredients of the recipe in view"""

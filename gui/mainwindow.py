@@ -72,7 +72,7 @@ class MainWindow(QWidget):
             # Set shinylist text
             item.set_main_text(str(recipe.name))
             item.set_sub_text(recipe.course + ', serves ' +
-                              str(recipe.servingSize))
+                              str(recipe.servingSize) + ' people')
 
             # Add the item to the shinylist
             self.recipeList.add_item(item)
@@ -132,7 +132,7 @@ class MainWindow(QWidget):
             # Set the main and subtext of the shinylist item
             item.set_main_text(recipe.name)
             item.set_sub_text(recipe.course + ', serves ' +
-                              str(recipe.servingSize))
+                              str(recipe.servingSize) + ' people')
 
             # Add the item to the shinylist
             self.recipeList.add_item(item)
@@ -205,6 +205,18 @@ class MainWindow(QWidget):
         recipeDialog = RecipeOverview(self, recipe)
         # Execute that dialog
         recipeDialog.exec_()
+
+        # Get the recipe from the dialog
+        recipe = recipeDialog.get_recipe()
+        self.recipes[index] = recipe
+
+        # Update the shinylist item the recipe is referred to
+        self.shinyListItems[index].set_main_text(recipe.name)
+        self.shinyListItems[index].set_sub_text(recipe.course + ', serves ' +
+                str(recipe.servingSize) + ' people')
+
+        # Refresh the list of recipes
+        self.refresh_list()
 
     def refresh_list(self):
         """
