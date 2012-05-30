@@ -45,7 +45,7 @@ class RecipeOverview(QDialog):
         """
         self.nameData.setText(self.recipe.name)
         self.courseData.setText(self.recipe.course)
-        self.servingSizeData.setText(str(self.recipe.servingSize))
+        self.servingSizeData.setText(str(self.recipe.servingSize) + ' people')
 
     def edit_recipe_info(self):
         """Edits the essential data of the recipe in view"""

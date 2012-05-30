@@ -67,6 +67,9 @@ class IngredientEdit(QDialog):
         if len(self.ingredient) == 0:
             self.ingredient = ['', 0.0, '']
 
+        # Set the window title
+        self.setWindowTitle("Add/Edit Ingredient")
+
         # Main Layout
         self.mainLayout = QVBoxLayout()
         # Form layout
@@ -74,13 +77,20 @@ class IngredientEdit(QDialog):
 
         # Name input
         self.nameData = QLineEdit()
+        self.nameData.setToolTip("The name of this ingredient")
         # Quantity input
         self.quantityData = QDoubleSpinBox()
+        self.quantityData.setToolTip("How much of this ingredient is " +
+                "needed (in its expressed units)")
         # Unit input
         self.unitData = QLineEdit()
+        self.unitData.setToolTip("The unit of measurement for this " +
+                "ingredient")
 
         # Save button
         self.saveButton = QPushButton("Save")
+        self.saveButton.setToolTip("Saves the changes you made for this " +
+                "ingredient")
 
         # Initialize the signals of the button
         self.saveButton.clicked.connect(self.submit)
@@ -194,44 +204,46 @@ class IngredientsWindow(QDialog):
         of ingredients that it will pass back to its parent window.
         """
         super(IngredientsWindow, self).__init__(parent)
+        self.setWindowTitle("Ingredients")
 
         # Main layout
         self.mainLayout = QVBoxLayout()
-
-        self.headerLabel = QLabel("Ingredients")
+        self.buttonLayout = QHBoxLayout()
 
         # The listwidget of ingredients
         self.ingredientsList = QListWidget()
         
-        # A handy label with instructions
-        self.helpLabel = QLabel("Click an ingredient on the list to edit it.\n"
-                                + "Clicking Add Ingredient will add a new " +
-                                " ingredient to the list.")
-
         # Add ingredient button
-        self.addIngredientButton = QPushButton("Add Ingredient")
+        self.addIngredientButton = QPushButton("Add")
+        self.addIngredientButton.setToolTip("Add an ingredient for this " +
+                "recipe")
 
         # Edit ingredient button
-        self.editIngredientButton = QPushButton("Edit Ingredient")
+        self.editIngredientButton = QPushButton("Edit")
+        self.editIngredientButton.setToolTip("Edit the selected ingredient")
         # Make it disabled first until the user selects an ingredient
         self.editIngredientButton.setEnabled(False)
 
         # Delete ingredient button
-        self.deleteIngredientButton = QPushButton("Delete Ingredient")
+        self.deleteIngredientButton = QPushButton("Delete")
+        self.deleteIngredientButton.setToolTip("Delete the selected " +
+                "ingredient")
         # Give it properties similar to the edit ingredient button
         self.deleteIngredientButton.setEnabled(False)
 
         # Save changes button
         self.saveChangesButton = QPushButton("Save Changes")
+        self.saveChangesButton.setToolTip("Saves all changes made and " +
+                "returns to the recipe overview (close this window to " +
+                "just discard your changes)")
 
         # Time to arrange the UI elements into a layout
         self.setLayout(self.mainLayout)
-        self.mainLayout.addWidget(self.headerLabel)
         self.mainLayout.addWidget(self.ingredientsList)
-        self.mainLayout.addWidget(self.helpLabel)
-        self.mainLayout.addWidget(self.addIngredientButton)
-        self.mainLayout.addWidget(self.editIngredientButton)
-        self.mainLayout.addWidget(self.deleteIngredientButton)
+        self.mainLayout.addLayout(self.buttonLayout)
+        self.buttonLayout.addWidget(self.addIngredientButton)
+        self.buttonLayout.addWidget(self.editIngredientButton)
+        self.buttonLayout.addWidget(self.deleteIngredientButton)
         self.mainLayout.addWidget(self.saveChangesButton)
 
         # Initialize the button signals
