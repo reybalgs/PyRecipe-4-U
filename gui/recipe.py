@@ -47,6 +47,33 @@ class RecipeOverview(QDialog):
         self.courseData.setText(self.recipe.course)
         self.servingSizeData.setText(str(self.recipe.servingSize) + ' people')
 
+    def refresh_ingredients(self):
+        """Refreshes the recipe's list of ingredients"""
+        self.ingredientData.clear() # clear the list
+
+        counter = 1 # A counter variable
+
+        # Put text in the ingredients list
+        for ingredient in self.recipe.ingredients:
+            # Go through the list of ingredients
+            self.ingredientData.insertPlainText(str(counter) + '. ' + 
+                    ingredient[0] + ': ' + str(ingredient[1]) + ' ' +
+                    ingredient[2] + '\n')
+            counter += 1
+
+    def refresh_instructions(self):
+        """Refreshes the recipe's list of instructions"""
+        self.instructionData.clear() # clear the llist
+
+        counter = 1 # A counter variable
+
+        for instruction in self.recipe.instructions:
+            # Go through the list of instructions
+            self.instructionData.insertPlainText(str(counter) + '. ' +
+                    instruction + '\n')
+            counter += 1
+
+
     def edit_recipe_info(self):
         """Edits the essential data of the recipe in view"""
         # Create an edit recipe dialog
@@ -72,6 +99,9 @@ class RecipeOverview(QDialog):
         # Get the updated list of ingredients from the dialog
         self.recipe.ingredients = ingredientsDialog.get_ingredients()
 
+        # Refresh the list of ingredients
+        self.refresh_ingredients()
+
     def edit_instructions(self):
         """Edits the instructions of the recipe in view"""
         # Create an instructions dialog
@@ -83,6 +113,9 @@ class RecipeOverview(QDialog):
 
         # Get the updated list of instructions from the dialog
         self.recipe.instructions = instructionsDialog.get_instructions()
+
+        # Refresh the list of instructions
+        self.refresh_instructions()
 
     def init_signals(self):
         """Initializes the signals of the buttons in the dialog"""
