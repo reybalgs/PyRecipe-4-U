@@ -53,6 +53,9 @@ class InstructionEdit(QDialog):
         """
         super(InstructionEdit, self).__init__(parent)
 
+        # Set the window title
+        self.setWindowTitle("Add/Edit Instruction")
+
         # the instruction to be edited
         self.instruction = instruction
 
@@ -68,13 +71,21 @@ class InstructionEdit(QDialog):
         self.instructionData = QTextEdit()
         self.instructionData.setText(self.instruction)
 
+        # A friendly note for the user
+        self.note = QLabel("Note: You do not have to put numbering on your " +
+                "instruction, Recipe-4-U will automatically do that for you.")
+        self.note.setWordWrap(True)
+
         # Save button
         self.saveButton = QPushButton("Save")
+        self.saveButton.setToolTip("Saves changes made and returns to the " +
+                "instructions screen.")
         self.saveButton.clicked.connect(self.submit)
 
         # Layout
         self.setLayout(self.mainLayout)
         self.mainLayout.addWidget(self.instructionData)
+        self.mainLayout.addWidget(self.note)
         self.mainLayout.addWidget(self.saveButton)
 
 class InstructionsWindow(QDialog):
@@ -241,50 +252,56 @@ class InstructionsWindow(QDialog):
         """
         super(InstructionsWindow, self).__init__(parent)
 
+        # Set the window title
+        self.setWindowTitle("Instructions")
+
         # Main layout
         self.mainLayout = QVBoxLayout()
         # Split layout for move buttons and list
         self.splitLayout = QHBoxLayout()
         # Layout for move up/down buttons
         self.moveButtonLayout = QVBoxLayout()
+        # Layout for most of the buttons below
+        self.buttonLayout = QHBoxLayout()
         
-        self.headerLabel = QLabel("Recipe Instructions")
-
         # The listwidget of instructions
         self.instructionsList = QListWidget()
+        self.instructionsList.setToolTip("Double click an instruction " +
+                "to edit it.")
         # Make the list word wrap enabled
         self.instructionsList.setWordWrap(True)
 
-        # A handy label with helpful instructions
-        self.helpLabel = QLabel("Click an Instruction above on the list to" +
-                " edit it.\nClicking Add Instruction will add a new instruction"
-                + " to the list.")
-
         # Move instruction buttons
-        self.moveUpButton = QPushButton("MoveUp")
-        self.moveDownButton = QPushButton("MoveDn")
+        self.moveUpButton = QPushButton("Up")
+        self.moveDownButton = QPushButton("Dn")
+        self.moveUpButton.setToolTip("Moves the selected recipe up")
+        self.moveDownButton.setToolTip("Moves the selected recipe down")
 
         # Add Instruction button
-        self.addInstructionButton = QPushButton("Add Instruction")
+        self.addInstructionButton = QPushButton("Add")
+        self.addInstructionButton.setToolTip("Add an instruction")
 
         # Edit Instruction button
-        self.editInstructionButton = QPushButton("Edit Instruction")
+        self.editInstructionButton = QPushButton("Edit")
+        self.editInstructionButton.setToolTip("Edit the selected instruction")
 
         # Delete Instruction button
-        self.deleteInstructionButton = QPushButton("Delete Instruction")
+        self.deleteInstructionButton = QPushButton("Delete")
+        self.deleteInstructionButton.setToolTip("Delete the selected " +
+                "instruction")
 
         # Save Changes button
         self.saveChangesButton = QPushButton("Save Changes")
+        self.saveChangesButton.setToolTip("Saves all changes and returns " +
+                "to the recipe overview")
 
         # Arrange the UI elements into a layout
         self.setLayout(self.mainLayout)
-        self.mainLayout.addWidget(self.headerLabel)
         self.mainLayout.addLayout(self.splitLayout)
         self.splitLayout.addWidget(self.instructionsList)
         self.splitLayout.addLayout(self.moveButtonLayout)
         self.moveButtonLayout.addWidget(self.moveUpButton)
         self.moveButtonLayout.addWidget(self.moveDownButton)
-        self.mainLayout.addWidget(self.helpLabel)
         self.mainLayout.addWidget(self.addInstructionButton)
         self.mainLayout.addWidget(self.editInstructionButton)
         self.mainLayout.addWidget(self.deleteInstructionButton)

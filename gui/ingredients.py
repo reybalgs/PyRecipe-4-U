@@ -212,6 +212,8 @@ class IngredientsWindow(QDialog):
 
         # The listwidget of ingredients
         self.ingredientsList = QListWidget()
+        self.ingredientsList.setToolTip("Double click on an ingredient " +
+                "to edit it.")
         
         # Add ingredient button
         self.addIngredientButton = QPushButton("Add")
