@@ -108,7 +108,6 @@ class InstructionsWindow(QDialog):
 
         Update: Now also affects the MoveUp and MoveDown buttons
         """
-        self.editInstructionButton.setEnabled(True)
         self.deleteInstructionButton.setEnabled(True)
         self.moveUpButton.setEnabled(True)
         self.moveDownButton.setEnabled(True)
@@ -118,7 +117,6 @@ class InstructionsWindow(QDialog):
         Disables the Edit, Delete, MoveUp and MoveDown buttons. Called whenever
         an item was just modified or moved in the list.
         """
-        self.editInstructionButton.setEnabled(False)
         self.deleteInstructionButton.setEnabled(False)
         self.moveUpButton.setEnabled(False)
         self.moveDownButton.setEnabled(False)
@@ -281,10 +279,6 @@ class InstructionsWindow(QDialog):
         self.addInstructionButton = QPushButton("Add")
         self.addInstructionButton.setToolTip("Add an instruction")
 
-        # Edit Instruction button
-        self.editInstructionButton = QPushButton("Edit")
-        self.editInstructionButton.setToolTip("Edit the selected instruction")
-
         # Delete Instruction button
         self.deleteInstructionButton = QPushButton("Delete")
         self.deleteInstructionButton.setToolTip("Delete the selected " +
@@ -302,9 +296,9 @@ class InstructionsWindow(QDialog):
         self.splitLayout.addLayout(self.moveButtonLayout)
         self.moveButtonLayout.addWidget(self.moveUpButton)
         self.moveButtonLayout.addWidget(self.moveDownButton)
-        self.mainLayout.addWidget(self.addInstructionButton)
-        self.mainLayout.addWidget(self.editInstructionButton)
-        self.mainLayout.addWidget(self.deleteInstructionButton)
+        self.mainLayout.addLayout(self.buttonLayout)
+        self.buttonLayout.addWidget(self.addInstructionButton)
+        self.buttonLayout.addWidget(self.deleteInstructionButton)
         self.mainLayout.addWidget(self.saveChangesButton)
         
         # Set the instructions list in this window to the one that was passed
@@ -316,7 +310,6 @@ class InstructionsWindow(QDialog):
         self.saveChangesButton.clicked.connect(self.submit)
         # Edit functions
         self.instructionsList.doubleClicked.connect(self.edit_instruction)
-        self.editInstructionButton.clicked.connect(self.edit_instruction)
         # Delete functions
         self.deleteInstructionButton.clicked.connect(self.delete_instruction)
         # Moving instructions in the list functions

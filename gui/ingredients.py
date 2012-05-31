@@ -122,7 +122,6 @@ class IngredientsWindow(QDialog):
         Enables the Edit and Delete ingredient buttons once the user has
         selected an item in the visible list.
         """
-        self.editIngredientButton.setEnabled(True)
         self.deleteIngredientButton.setEnabled(True)
 
     def initialize_list(self):
@@ -171,7 +170,6 @@ class IngredientsWindow(QDialog):
 
         # Disable the edit and delete ingredient buttons again to "fool" the
         # user that their selection was reset
-        self.editIngredientButton.setEnabled(False)
         self.deleteIngredientButton.setEnabled(False)
 
     def delete_ingredient(self):
@@ -189,7 +187,6 @@ class IngredientsWindow(QDialog):
 
         # Disable the edit and delete ingredient buttons again to "fool" the
         # user that their selection was reset
-        self.editIngredientButton.setEnabled(False)
         self.deleteIngredientButton.setEnabled(False)
 
     def submit(self):
@@ -220,12 +217,6 @@ class IngredientsWindow(QDialog):
         self.addIngredientButton.setToolTip("Add an ingredient for this " +
                 "recipe")
 
-        # Edit ingredient button
-        self.editIngredientButton = QPushButton("Edit")
-        self.editIngredientButton.setToolTip("Edit the selected ingredient")
-        # Make it disabled first until the user selects an ingredient
-        self.editIngredientButton.setEnabled(False)
-
         # Delete ingredient button
         self.deleteIngredientButton = QPushButton("Delete")
         self.deleteIngredientButton.setToolTip("Delete the selected " +
@@ -244,7 +235,6 @@ class IngredientsWindow(QDialog):
         self.mainLayout.addWidget(self.ingredientsList)
         self.mainLayout.addLayout(self.buttonLayout)
         self.buttonLayout.addWidget(self.addIngredientButton)
-        self.buttonLayout.addWidget(self.editIngredientButton)
         self.buttonLayout.addWidget(self.deleteIngredientButton)
         self.mainLayout.addWidget(self.saveChangesButton)
 
@@ -253,7 +243,6 @@ class IngredientsWindow(QDialog):
         self.saveChangesButton.clicked.connect(self.submit)
         # For editing ingredients
         self.ingredientsList.doubleClicked.connect(self.edit_ingredient)
-        self.editIngredientButton.clicked.connect(self.edit_ingredient)
         # For deleting ingredients
         self.deleteIngredientButton.clicked.connect(self.delete_ingredient)
         # Enable the edit and delete ingredient buttons once an item has been
