@@ -156,10 +156,7 @@ class MainWindow(QWidget):
         recipe = self.recipes[index]
 
         # Encode the recipe into a JSON string
-        json_recipe = json.dumps([{"name":recipe.name},
-            {"course":recipe.course}, {"serving_size":recipe.servingSize},
-            {"ingredients":recipe.ingredients},
-            {"instructions":recipe.instructions}])
+        json_recipe = recipe.export()
 
         # Create a filedialog for saving the file
         fileDialog = QFileDialog(self)
