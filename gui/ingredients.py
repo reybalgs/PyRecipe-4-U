@@ -24,8 +24,9 @@ class IngredientEdit(QDialog):
         Returns the ingredient to the array of ingredients in the parent
         window
         """
-        self.ingredient = [self.nameData.text(), self.quantityData.value(),
-                      self.unitData.text()]
+        self.ingredient['name'] = self.nameData.text()
+        self.ingredient['quantity'] = self.quantityData.value()
+        self.ingredient['unit'] = self.unitData.text()
 
         return self.ingredient
 
@@ -49,11 +50,11 @@ class IngredientEdit(QDialog):
         """
         Refreshes the fields using the passed ingredient.
         """
-        self.nameData.setText(self.ingredient[0])
-        self.quantityData.setValue(self.ingredient[1])
-        self.unitData.setText(self.ingredient[2])
+        self.nameData.setText(self.ingredient['name'])
+        self.quantityData.setValue(self.ingredient['quantity'])
+        self.unitData.setText(self.ingredient['unit'])
 
-    def __init__(self, parent, ingredient = []):
+    def __init__(self, parent, ingredient = {}):
         """
         Initializes the window and its UI components.
         """
@@ -65,7 +66,7 @@ class IngredientEdit(QDialog):
         # If the list is empty (len 0), then this is a new ingredient, create
         # some dummy values
         if len(self.ingredient) == 0:
-            self.ingredient = ['', 0.0, '']
+            self.ingredient = {'name': '', 'quantity': 0.0, 'unit': ''}
 
         # Set the window title
         self.setWindowTitle("Add/Edit Ingredient")
@@ -132,9 +133,9 @@ class IngredientsWindow(QDialog):
         # Clear the list
         self.ingredientsList.clear()
 
-        for item in self.ingredients:
-            self.ingredientsList.addItem(str(item[0]) + " - (" + str(item[1]) +
-                                         " " + str(item[2]) + ")")
+        for ingredient in self.ingredients:
+            self.ingredientsList.addItem(ingredient['name'] + ': ' + 
+                    str(ingredient['quantity']) + ' ' +  ingredient['unit'])
 
     def add_ingredient(self):
         """
@@ -144,12 +145,10 @@ class IngredientsWindow(QDialog):
         ingredientEditDialog = IngredientEdit(self)
         ingredientEditDialog.exec_() # Execute the dialog
         ingredient = ingredientEditDialog.get_ingredient()
-        if not (ingredient[0] == '' or ingredient[1] == 0.0 or
-                ingredient[2] == ''):
+        if not (ingredient['name'] == '' or ingredient['quantity'] == 0.0 or
+                ingredient['unit'] == ''):
                     self.ingredients.append(ingredient)
-                    self.ingredientsList.addItem(str(ingredient[0]) + " - (" +
-                                                 str(ingredient[1]) + " " +
-                                                 str(ingredient[2]) + ")")
+                    self.initialize_list()
 
     def edit_ingredient(self):
         """

@@ -56,9 +56,8 @@ class RecipeOverview(QDialog):
         # Put text in the ingredients list
         for ingredient in self.recipe.ingredients:
             # Go through the list of ingredients
-            self.ingredientData.insertPlainText(str(counter) + '. ' + 
-                    ingredient[0] + ': ' + str(ingredient[1]) + ' ' +
-                    ingredient[2] + '\n')
+            self.ingredientData.insertPlainText(ingredient['name'] + ': ' + 
+                    str(ingredient['quantity']) + ' ' + ingredient['unit'])
             counter += 1
 
     def refresh_instructions(self):

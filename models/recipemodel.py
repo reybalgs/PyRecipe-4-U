@@ -11,7 +11,7 @@
 import simplejson as json
 
 class RecipeModel():
-    def export(self):
+    def export_recipe(self):
         """
         This function exports the current recipe object as a JSON-encoded
         recipe (.rcpe) file.
@@ -26,8 +26,7 @@ class RecipeModel():
         # Return the string
         return json_recipe
 
-
-    def import(self, raw_json):
+    def import_recipe(self, raw_json):
         """
         Parses a JSON-encoded .rcpe file and then sets it to itself.
         The string containing the [contents] of the JSON file is passed into
