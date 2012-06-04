@@ -19,9 +19,9 @@ class RecipeModel():
         Actually just returns a JSON-encoded string
         """
         # Dump the object into a JSON-formatted string
-        json_recipe = json.dumps({"recipe": [{"name": self.name}, {"course": self.course}, 
-            {"serving_size": self.servingSize}, {"ingredients": self.ingredients},
-            {"instructions": self.instructions}]})
+        json_recipe = json.dumps({"name":self.name,"course":self.course, 
+            "serving_size":self.servingSize,"ingredients":self.ingredients,
+            "instructions":self.instructions}, separators=(',',':'))
 
         # Return the string
         return json_recipe
@@ -32,13 +32,33 @@ class RecipeModel():
         The string containing the [contents] of the JSON file is passed into
         this function.
         """
-        recipe = RecipeModel() # create a temporary recipe
-
         # Put the decoded JSON string into a "raw" recipe object 
         raw_recipe = json.loads(raw_json)
 
         print raw_recipe # print it for now
-        # TODO Add the data of the raw recipe into the actual recipe
+
+        self.name = raw_recipe['name']
+        self.course = raw_recipe['course']
+        self.servingSize = raw_recipe['serving_size']
+        self.ingredients = raw_recipe['ingredients']
+        self.instructions = raw_recipe['instructions']
+
+    def print_recipe_information(self):
+        """
+        A useful debugging function that prints the entirety of the recipe
+        """
+        print '\nName: ' + self.name
+        print 'Course: ' + self.course
+        print 'Serving Size: ' + str(self.servingSize)
+        
+        print '\nIngredients:'
+        for ingredient in self.ingredients:
+            print(ingredient['name'] + str(ingredient['quantity']) +
+                    ingredient['unit'])
+
+        print '\nInstructions:'
+        for instruction in self.instructions:
+            print instruction
 
     def get_recipe(self, recipe):
         """

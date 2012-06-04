@@ -153,8 +153,8 @@ class RecipeOverview(QDialog):
         for ingredient in self.recipe.ingredients:
             # Go through the list of ingredients
             self.ingredientData.insertPlainText(str(counter) + '. ' + 
-                    ingredient[0] + ': ' + str(ingredient[1]) + ' ' +
-                    ingredient[2] + '\n')
+                    ingredient['name'] + ': ' + str(ingredient['quantity']) + 
+                    ' ' + ingredient['unit'] + '\n')
             counter += 1
 
         counter = 1

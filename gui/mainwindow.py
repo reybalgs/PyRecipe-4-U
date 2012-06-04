@@ -108,23 +108,8 @@ class MainWindow(QWidget):
             # Read from the filepath
             file = open(filePath[0], 'r')
 
-            # Create a "raw" recipe object from the file
-            raw_recipe = json.loads(file.read())
-
-            # Set the name of the recipe
-            recipe.name = raw_recipe[0]['name']
-            # Set the course of the recipe
-            recipe.course = raw_recipe[1]['course']
-            # Set the serving size of the recipe
-            recipe.servingSize = float(raw_recipe[2]['serving_size'])
-            # Set the ingredients of the recipe
-            for ingredient in raw_recipe[3]['ingredients']:
-                recipe.ingredients.append([ingredient[0], ingredient[1], 
-                                           ingredient[2]])
-
-            # Set the instructions of the recipe
-            for instruction in raw_recipe[4]['instructions']:
-                recipe.instructions.append(instruction)
+            # Load the file into the recipe
+            recipe.import_recipe(file.read())
 
             # Create a shinylist item
             item = ShinyListItem()
@@ -154,9 +139,12 @@ class MainWindow(QWidget):
 
         # Get the recipe from the list of recipes using that index
         recipe = self.recipes[index]
+    
+        # Print the recipe first (debug)
+        recipe.print_recipe_information()
 
         # Encode the recipe into a JSON string
-        json_recipe = recipe.export()
+        json_recipe = recipe.export_recipe()
 
         # Create a filedialog for saving the file
         fileDialog = QFileDialog(self)
