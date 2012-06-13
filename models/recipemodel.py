@@ -47,18 +47,35 @@ class RecipeModel():
         """
         A useful debugging function that prints the entirety of the recipe
         """
+        # Print basic information
         print '\nName: ' + self.name
         print 'Course: ' + self.course
         print 'Serving Size: ' + str(self.servingSize)
         
+        # Print the ingredients
         print '\nIngredients:'
-        for ingredient in self.ingredients:
-            print(ingredient['name'] + str(ingredient['quantity']) +
+        if len(self.ingredients) == 0:
+            print 'No ingredients.'
+        else:
+            for ingredient in self.ingredients:
+                print(ingredient['name'] + str(ingredient['quantity']) +
                     ingredient['unit'])
 
+        # Print the instructions
         print '\nInstructions:'
-        for instruction in self.instructions:
-            print instruction
+        if len(self.instructions) == 0:
+            print 'No instructions.'
+        else:
+            for instruction in self.instructions:
+                print instruction
+
+        # Print the filepaths of the images
+        print '\nImage paths:'
+        if len(self.images) == 0:
+            print 'No images.'
+        else:
+            for filePath in self.images:
+                print filePath
 
     def get_recipe(self, recipe):
         """
@@ -76,3 +93,4 @@ class RecipeModel():
         self.servingSize = 0
         self.ingredients = []
         self.instructions = []
+        self.images = []
