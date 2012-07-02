@@ -126,6 +126,7 @@ class RecipeOverview(QDialog):
         """Initializes the UI of the dialog"""
         # Element creation
         self.mainLayout = QVBoxLayout()
+        self.splitLayout = QHBoxLayout()
         self.formLayout = QFormLayout()
         
         self.nameData = QLabel(self.recipe.name)
@@ -143,6 +144,7 @@ class RecipeOverview(QDialog):
                 "this recipe.")
 
         self.instructionData = QTextBrowser()
+        self.instructionData.setMinimumWidth(360)
         self.editInstructionsButton = QPushButton("Edit Instructions")
         self.editInstructionsButton.setToolTip("Edit the instructions for " +
                 "this recipe.")
@@ -170,9 +172,15 @@ class RecipeOverview(QDialog):
         self.editIngredientsButton = QPushButton("Edit Ingredients")
         self.editInstructionsButton = QPushButton("Edit Instructions")
 
+        # Right hand side items
+        self.imageLabel = QLabel("No image available")
+        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
+
         # Layouting
         self.setLayout(self.mainLayout)
-        self.mainLayout.addLayout(self.formLayout)
+        self.mainLayout.addLayout(self.splitLayout)
+        self.splitLayout.addLayout(self.formLayout)
+        self.splitLayout.addWidget(self.imageLabel)
 
         self.formLayout.addRow("<b>Name:</b>", self.nameData)
         self.formLayout.addRow("<b>Course:</b>", self.courseData)

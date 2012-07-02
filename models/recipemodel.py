@@ -3,8 +3,7 @@
 # recipemodel.py
 #
 # Provides the class model for a recipe. The class model is passed around in
-# the application proper, and it is from and to them that the .rcpe files are
-# decoded and encoded.
+# the application proper.
 #
 ###############################################################################
 
