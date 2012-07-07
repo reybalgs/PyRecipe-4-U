@@ -127,7 +127,8 @@ class RecipeOverview(QDialog):
         # Element creation
         self.mainLayout = QVBoxLayout()
         self.splitLayout = QHBoxLayout()
-        self.formLayout = QFormLayout()
+        self.formLayout = QFormLayout() # Layout for the left side
+        self.rightHandLayout = QVBoxLayout() # Layout for the right side
         
         self.nameData = QLabel(self.recipe.name)
         self.courseData = QLabel(self.recipe.course)
@@ -173,15 +174,24 @@ class RecipeOverview(QDialog):
         self.editInstructionsButton = QPushButton("Edit Instructions")
 
         # Right hand side items
+        # The recipe image
         self.imageLabel = QLabel("No image available")
         self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
+        # Image chooser buttons
+        # Layout for the buttons
+        self.imageButtonsLayout = QHBoxLayout()
+        self.prevImageButton = QPushButton("Previous")
+        self.nextImageButton = QPushButton("Next")
+        self.newImageButton = QPushButton("New Image")
+        self.deleteImageButton = QPushButton("Delete Image")
 
         # Layouting
         self.setLayout(self.mainLayout)
         self.mainLayout.addLayout(self.splitLayout)
         self.splitLayout.addLayout(self.formLayout)
-        self.splitLayout.addWidget(self.imageLabel)
+        self.splitLayout.addLayout(self.rightHandLayout)
 
+        # Left hand side
         self.formLayout.addRow("<b>Name:</b>", self.nameData)
         self.formLayout.addRow("<b>Course:</b>", self.courseData)
         self.formLayout.addRow("<b>Serving Size:</b>", self.servingSizeData)
@@ -190,6 +200,14 @@ class RecipeOverview(QDialog):
         self.formLayout.addRow("", self.editIngredientsButton)
         self.formLayout.addRow("<b>Instructions:</b>", self.instructionData)
         self.formLayout.addRow("", self.editInstructionsButton)
+
+        # Right hand side
+        self.rightHandLayout.addWidget(self.imageLabel)
+        self.rightHandLayout.addLayout(self.imageButtonsLayout)
+        self.imageButtonsLayout.addWidget(self.prevImageButton)
+        self.imageButtonsLayout.addWidget(self.newImageButton)
+        self.imageButtonsLayout.addWidget(self.deleteImageButton)
+        self.imageButtonsLayout.addWidget(self.nextImageButton)
 
     def __init__(self, parent, recipe):
         super(RecipeOverview, self).__init__(parent)
