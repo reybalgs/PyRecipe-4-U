@@ -116,8 +116,47 @@ class RecipeOverview(QDialog):
         # Refresh the list of instructions
         self.refresh_instructions()
 
+    def toggle_image_buttons(self):
+        """
+        Disables and/or enables the some of the image buttons depending on the 
+        current state of the recipe.
+        """
+        if (len(self.recipe.images) < 2):
+            # We have only one or no image for this recipe
+            # Disable the previous and next image buttons
+            self.prevImageButton.setEnabled(False)
+            self.nextImageButton.setEnabled(False)
+            if (len(self.recipe.images) == 0):
+                # We have no images, so disable the delete button as it makes
+                # no sense.
+                self.deleteImageButton.setEnabled(False)
+            else:
+                # There's at least one image, allow the user to delete that
+                # recipe
+                self.deleteImageButton.setEnabled(True)
+        else:
+            # There are two or more recipes
+            # We have to disable and enable the buttons based on the current
+            # image selected for the recipe.
+            # 
+            # First let's enable the delete image button
+            self.deleteImageButton.setEnabled(True)
+            if self.selectedImage == 0:
+                # We are at the first image, disable the prev image button
+                self.prevImageButton.setEnabled(False)
+                self.nextImageButton.setEnabled(True)
+            elif self.selectedImage == ((len(self.recipe.images)) - 1):
+                # We are at the last image, disable the next image button
+                self.prevImageButton.setEnabled(True)
+                self.nextImageButton.setEnabled(False)
+            else:
+                # We are somewhere in the middle, enable both buttons
+                self.prevImageButton.setEnabled(True)
+                self.nextImageButton.setEnabled(True)
+
     def init_signals(self):
         """Initializes the signals of the buttons in the dialog"""
+        # Buttons on the left side
         self.editRecipeButton.clicked.connect(self.edit_recipe_info)
         self.editIngredientsButton.clicked.connect(self.edit_ingredients)
         self.editInstructionsButton.clicked.connect(self.edit_instructions)
@@ -176,7 +215,7 @@ class RecipeOverview(QDialog):
         # Right hand side items
         # The recipe image
         self.imageLabel = QLabel("No image available")
-        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
+        self.imageLabel.setPixmap(QPixmap("./gui/images/cheeseburger.png"))
         # Image chooser buttons
         # Layout for the buttons
         self.imageButtonsLayout = QHBoxLayout()
@@ -209,6 +248,9 @@ class RecipeOverview(QDialog):
         self.imageButtonsLayout.addWidget(self.deleteImageButton)
         self.imageButtonsLayout.addWidget(self.nextImageButton)
 
+        # Toggling the image buttons
+        self.toggle_image_buttons()
+
     def __init__(self, parent, recipe):
         super(RecipeOverview, self).__init__(parent)
         self.recipe = recipe # Get the recipe passed
@@ -216,6 +258,11 @@ class RecipeOverview(QDialog):
 
         self.init_ui()
         self.init_signals()
+
+        # A counter variable that keeps track of the currently selected
+        # image for the recipe
+        # Initialized at 0 because we always start from the start.
+        self.selectedImage = 0
 
 class RecipeWindow(QDialog):
     """
