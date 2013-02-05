@@ -116,6 +116,30 @@ class RecipeOverview(QDialog):
         # Refresh the list of instructions
         self.refresh_instructions()
 
+    def import_image(self):
+        """Imports an image to be used by the current recipe"""
+        # Create a var containing a list of images
+        files = ''
+        # Create a var that contains the path of the actual image
+        path = ''
+        # Invoke a filedialog that will look for the image
+        fileDialog = QFileDialog(self)
+        fileDialog.setFileMode(QFileDialog.ExistingFile)
+        #fileDialog.setNameFilter("Image Files(*.png, *.jpg, *.jpeg, *.gif" +
+        #        ", *.bmp")
+
+        if fileDialog.exec_():
+            files = fileDialog.selectedFiles()
+            path = files[0]
+            print path + ' loaded!'
+
+        if (path) and (path.lower().endswith(('.png', '.jpg', '.jpeg', '.gif',
+                '.bmp'))):
+            # There is an image
+            # Put the image path into the list of images on this recipe.
+            self.recipe.images.append(path)
+            print self.recipe.name + ' images: ' + str(self.recipe.images)
+
     def toggle_image_buttons(self):
         """
         Disables and/or enables the some of the image buttons depending on the 
@@ -160,6 +184,7 @@ class RecipeOverview(QDialog):
         self.editRecipeButton.clicked.connect(self.edit_recipe_info)
         self.editIngredientsButton.clicked.connect(self.edit_ingredients)
         self.editInstructionsButton.clicked.connect(self.edit_instructions)
+        self.newImageButton.clicked.connect(self.import_image)
 
     def init_ui(self):
         """Initializes the UI of the dialog"""
