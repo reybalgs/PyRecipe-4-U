@@ -148,6 +148,27 @@ class RecipeOverview(QDialog):
         self.toggle_image_buttons()
         print self.selectedImage
 
+    def delete_image(self):
+        """Deletes the currently selected image"""
+        # TODO: Create a dialog that warns the user when there is only one
+        # image in the recipe
+        # Delete the image from the list of images
+        deleted = self.recipe.images.pop(self.selectedImage)
+        if(self.selectedImage == len(self.recipe.images)):
+            # We are at the end of the list
+            self.selectedImage -= 1
+        if(len(self.recipe.images) == 0):
+            # We don't have any images anymore
+            self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
+            self.selectedImage = 0
+        else:
+            # We still have an image
+            self.imageLabel.setPixmap(QPixmap(
+                self.recipe.images[self.selectedImage]))
+        # Refresh the buttons
+        self.toggle_image_buttons()
+        print str(deleted) + ' has been removed from the list of images!'
+
     def next_image(self):
         """
         Changes the currently displayed image to the next image in the recipe's
@@ -234,6 +255,7 @@ class RecipeOverview(QDialog):
         self.newImageButton.clicked.connect(self.import_image)
         self.prevImageButton.clicked.connect(self.previous_image)
         self.nextImageButton.clicked.connect(self.next_image)
+        self.deleteImageButton.clicked.connect(self.delete_image)
 
     def init_ui(self):
         """Initializes the UI of the dialog"""
