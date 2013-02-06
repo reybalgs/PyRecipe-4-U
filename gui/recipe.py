@@ -140,6 +140,53 @@ class RecipeOverview(QDialog):
             self.recipe.images.append(path)
             print self.recipe.name + ' images: ' + str(self.recipe.images)
 
+        # Now we have to set the image of the dish to the newly-imported image.
+        self.selectedImage = (len(self.recipe.images) - 1)
+        # Set the displayed image to the selected image
+        self.imageLabel.setPixmap(QPixmap(path))
+        # Refresh the image buttons
+        self.toggle_image_buttons()
+        print self.selectedImage
+
+    def next_image(self):
+        """
+        Changes the currently displayed image to the next image in the recipe's
+        sequence of images, if any.
+        """
+        if len(self.recipe.images) > 1:
+            # We have an image to go to
+            if self.selectedImage < (len(self.recipe.images) - 1):
+                # We are not at the end of of the image list, we can move
+                # forward
+                # Increment the selected image index
+                self.selectedImage += 1
+                # Change the displayed image
+                self.imageLabel.setPixmap(QPixmap(
+                    self.recipe.images[self.selectedImage]))
+                # Toggle the buttons
+                self.toggle_image_buttons()
+            else:
+                print 'Already at the end of the image list!'
+
+    def previous_image(self):
+        """
+        Changes the curently displayed image to the previous image in the
+        recipe's sequence of images, if any.
+        """
+        if len(self.recipe.images) > 1:
+            # We have an image to go to
+            if self.selectedImage > 0:
+                # We are not at the beginning so we can move back once
+                # Decrement the selected image index
+                self.selectedImage -= 1
+                # Change the displayed image
+                self.imageLabel.setPixmap(QPixmap(
+                    self.recipe.images[self.selectedImage]))
+                # Toggle the buttons
+                self.toggle_image_buttons()
+            else:
+                print 'Already at the beginning of the list!'
+
     def toggle_image_buttons(self):
         """
         Disables and/or enables the some of the image buttons depending on the 
@@ -185,6 +232,8 @@ class RecipeOverview(QDialog):
         self.editIngredientsButton.clicked.connect(self.edit_ingredients)
         self.editInstructionsButton.clicked.connect(self.edit_instructions)
         self.newImageButton.clicked.connect(self.import_image)
+        self.prevImageButton.clicked.connect(self.previous_image)
+        self.nextImageButton.clicked.connect(self.next_image)
 
     def init_ui(self):
         """Initializes the UI of the dialog"""
@@ -240,7 +289,7 @@ class RecipeOverview(QDialog):
         # Right hand side items
         # The recipe image
         self.imageLabel = QLabel("No image available")
-        self.imageLabel.setPixmap(QPixmap("./gui/images/cheeseburger.png"))
+        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
         # Image chooser buttons
         # Layout for the buttons
         self.imageButtonsLayout = QHBoxLayout()
