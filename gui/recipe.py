@@ -143,7 +143,7 @@ class RecipeOverview(QDialog):
         # Now we have to set the image of the dish to the newly-imported image.
         self.selectedImage = (len(self.recipe.images) - 1)
         # Set the displayed image to the selected image
-        self.imageLabel.setPixmap(QPixmap(path))
+        self.imageLabel.setPixmap(QPixmap(path).scaledToWidth(420))
         # Refresh the image buttons
         self.toggle_image_buttons()
         print self.selectedImage
@@ -164,7 +164,7 @@ class RecipeOverview(QDialog):
         else:
             # We still have an image
             self.imageLabel.setPixmap(QPixmap(
-                self.recipe.images[self.selectedImage]))
+                self.recipe.images[self.selectedImage]).scaledToWidth(420))
         # Refresh the buttons
         self.toggle_image_buttons()
         print str(deleted) + ' has been removed from the list of images!'
@@ -183,7 +183,7 @@ class RecipeOverview(QDialog):
                 self.selectedImage += 1
                 # Change the displayed image
                 self.imageLabel.setPixmap(QPixmap(
-                    self.recipe.images[self.selectedImage]))
+                    self.recipe.images[self.selectedImage]).scaledToWidth(420))
                 # Toggle the buttons
                 self.toggle_image_buttons()
             else:
@@ -202,7 +202,7 @@ class RecipeOverview(QDialog):
                 self.selectedImage -= 1
                 # Change the displayed image
                 self.imageLabel.setPixmap(QPixmap(
-                    self.recipe.images[self.selectedImage]))
+                    self.recipe.images[self.selectedImage]).scaledToWidth(420))
                 # Toggle the buttons
                 self.toggle_image_buttons()
             else:
