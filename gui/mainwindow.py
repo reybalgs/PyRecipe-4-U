@@ -92,7 +92,7 @@ class MainWindow(QWidget):
         # Create a recipe object
         recipe = RecipeModel()
         # Invoke a filedialog that will look for the .rcpe file
-        fileDialog = QFileDialog(self)
+        fileDialog = QFileDialog(self, "Import Recipe", "./recipes/")
         fileDialog.setFileMode(QFileDialog.ExistingFile)
         fileDialog.setNameFilter("Recipe File(*.rcpe)")
         
