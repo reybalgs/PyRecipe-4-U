@@ -123,7 +123,7 @@ class RecipeOverview(QDialog):
         # Create a var that contains the path of the actual image
         path = ''
         # Invoke a filedialog that will look for the image
-        fileDialog = QFileDialog(self)
+        fileDialog = QFileDialog(self, "Import Image", "./gui/images/")
         fileDialog.setFileMode(QFileDialog.ExistingFile)
         #fileDialog.setNameFilter("Image Files(*.png, *.jpg, *.jpeg, *.gif" +
         #        ", *.bmp")
