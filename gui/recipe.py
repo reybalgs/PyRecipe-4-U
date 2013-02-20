@@ -302,7 +302,7 @@ class RecipeOverview(QDialog):
         if(len(self.recipe.images)):
             # We have an image
             self.imageLabel.setPixmap(QPixmap(
-                self.recipe.images[self.selectedImage]))
+                self.recipe.images[self.selectedImage]).scaledToWidth(420))
         else:
             # No image, use placeholder
             self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
