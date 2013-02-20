@@ -20,7 +20,8 @@ class RecipeModel():
         # Dump the object into a JSON-formatted string
         json_recipe = json.dumps({"name":self.name,"course":self.course, 
             "serving_size":self.servingSize,"ingredients":self.ingredients,
-            "instructions":self.instructions}, separators=(',',':'))
+            "instructions":self.instructions,"images":self.images},
+            separators=(',',':'))
 
         # Return the string
         return json_recipe
@@ -41,6 +42,7 @@ class RecipeModel():
         self.servingSize = raw_recipe['serving_size']
         self.ingredients = raw_recipe['ingredients']
         self.instructions = raw_recipe['instructions']
+        self.images = raw_recipe['images']
 
     def print_recipe_information(self):
         """

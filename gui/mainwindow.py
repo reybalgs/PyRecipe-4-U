@@ -147,7 +147,7 @@ class MainWindow(QWidget):
         json_recipe = recipe.export_recipe()
 
         # Create a filedialog for saving the file
-        fileDialog = QFileDialog(self)
+        fileDialog = QFileDialog(self, "Export Recipe", "./recipes/")
         fileDialog.setAcceptMode(QFileDialog.AcceptSave)
         fileDialog.setFileMode(QFileDialog.AnyFile)
         fileDialog.setNameFilter("Recipe File(*.rcpe)")

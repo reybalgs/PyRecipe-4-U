@@ -56,8 +56,9 @@ class RecipeOverview(QDialog):
         # Put text in the ingredients list
         for ingredient in self.recipe.ingredients:
             # Go through the list of ingredients
-            self.ingredientData.insertPlainText(ingredient['name'] + ': ' + 
-                    str(ingredient['quantity']) + ' ' + ingredient['unit'])
+            self.ingredientData.insertPlainText(str(counter) + '. ' + 
+                    ingredient['name'] + ': ' + str(ingredient['quantity']) + 
+                    ' ' + ingredient['unit'] + '\n')
             counter += 1
 
     def refresh_instructions(self):
@@ -66,12 +67,12 @@ class RecipeOverview(QDialog):
 
         counter = 1 # A counter variable
 
+        # Put text in the instructions list
         for instruction in self.recipe.instructions:
             # Go through the list of instructions
             self.instructionData.insertPlainText(str(counter) + '. ' +
                     instruction + '\n')
             counter += 1
-
 
     def edit_recipe_info(self):
         """Edits the essential data of the recipe in view"""
@@ -285,23 +286,9 @@ class RecipeOverview(QDialog):
         self.editInstructionsButton.setToolTip("Edit the instructions for " +
                 "this recipe.")
 
-        counter = 1 # A counter variable
-
-        # Put text in the ingredients list
-        for ingredient in self.recipe.ingredients:
-            # Go through the list of ingredients
-            self.ingredientData.insertPlainText(str(counter) + '. ' + 
-                    ingredient['name'] + ': ' + str(ingredient['quantity']) + 
-                    ' ' + ingredient['unit'] + '\n')
-            counter += 1
-
-        counter = 1
-        # Put text in the instructions list
-        for instruction in self.recipe.instructions:
-            # Go through the list of instructions
-            self.instructionData.insertPlainText(str(counter) + '. ' +
-                    instruction + '\n')
-            counter += 1
+        # Refresh the ingredients and instructions list
+        self.refresh_ingredients()
+        self.refresh_instructions()
 
         self.buttonLayout = QHBoxLayout()
         self.editRecipeButton = QPushButton("Edit Recipe")
@@ -310,8 +297,16 @@ class RecipeOverview(QDialog):
 
         # Right hand side items
         # The recipe image
-        self.imageLabel = QLabel("No image available")
-        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
+        # First, we check if the recipe has an image already
+        self.imageLabel = QLabel()
+        if(len(self.recipe.images)):
+            # We have an image
+            self.imageLabel.setPixmap(QPixmap(
+                self.recipe.images[self.selectedImage]))
+        else:
+            # No image, use placeholder
+            self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
+
         # Image chooser buttons
         # Layout for the buttons
         self.imageButtonsLayout = QHBoxLayout()
@@ -351,6 +346,7 @@ class RecipeOverview(QDialog):
         super(RecipeOverview, self).__init__(parent)
         self.recipe = recipe # Get the recipe passed
         self.setWindowTitle("Overview for " + self.recipe.name)
+        self.selectedImage = 0
 
         self.init_ui()
         self.init_signals()
