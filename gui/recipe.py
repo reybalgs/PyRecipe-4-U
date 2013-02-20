@@ -263,7 +263,7 @@ class RecipeOverview(QDialog):
         # Element creation
         self.mainLayout = QVBoxLayout()
         self.splitLayout = QHBoxLayout()
-        self.formLayout = QFormLayout() # Layout for the left side
+        self.formLayout = QGridLayout() # Layout for the left side
         self.rightHandLayout = QVBoxLayout() # Layout for the right side
         
         self.nameData = QLabel(self.recipe.name)
@@ -276,12 +276,14 @@ class RecipeOverview(QDialog):
                 "information (name, course, serving size)")
 
         self.ingredientData = QTextBrowser()
+        self.ingredientData.setMinimumHeight(0)
         self.editIngredientsButton = QPushButton("Edit Ingredients")
         self.editIngredientsButton.setToolTip("Edit the ingredients for " +
                 "this recipe.")
 
         self.instructionData = QTextBrowser()
         self.instructionData.setMinimumWidth(360)
+        self.instructionData.setMinimumHeight(0)
         self.editInstructionsButton = QPushButton("Edit Instructions")
         self.editInstructionsButton.setToolTip("Edit the instructions for " +
                 "this recipe.")
@@ -322,14 +324,21 @@ class RecipeOverview(QDialog):
         self.splitLayout.addLayout(self.rightHandLayout)
 
         # Left hand side
-        self.formLayout.addRow("<b>Name:</b>", self.nameData)
-        self.formLayout.addRow("<b>Course:</b>", self.courseData)
-        self.formLayout.addRow("<b>Serving Size:</b>", self.servingSizeData)
-        self.formLayout.addRow("", self.editRecipeButton)
-        self.formLayout.addRow("<b>Ingredients:</b>", self.ingredientData)
-        self.formLayout.addRow("", self.editIngredientsButton)
-        self.formLayout.addRow("<b>Instructions:</b>", self.instructionData)
-        self.formLayout.addRow("", self.editInstructionsButton)
+        self.formLayout.addWidget(QLabel("<b>Name:</b>"), 0, 0)
+        self.formLayout.addWidget(self.nameData, 0, 1)
+        self.formLayout.addWidget(QLabel("<b>Course:</b>"), 1, 0)
+        self.formLayout.addWidget(self.courseData, 1, 1)
+        self.formLayout.addWidget(QLabel("<b>Serving Size:</b>"), 2, 0)
+        self.formLayout.addWidget(self.servingSizeData, 2, 1)
+        self.formLayout.addWidget(self.editRecipeButton, 3, 1)
+        self.formLayout.addWidget(QLabel("<b>Ingredients:</b>"), 4, 0,
+                Qt.AlignTop)
+        self.formLayout.addWidget(self.ingredientData, 4, 1)
+        self.formLayout.addWidget(self.editIngredientsButton, 5, 1)
+        self.formLayout.addWidget(QLabel("<b>Instructions:</b>"), 6, 0,
+                Qt.AlignTop)
+        self.formLayout.addWidget(self.instructionData, 6, 1)
+        self.formLayout.addWidget(self.editInstructionsButton, 7, 1)
 
         # Right hand side
         self.rightHandLayout.addWidget(self.imageLabel)
@@ -346,15 +355,13 @@ class RecipeOverview(QDialog):
         super(RecipeOverview, self).__init__(parent)
         self.recipe = recipe # Get the recipe passed
         self.setWindowTitle("Overview for " + self.recipe.name)
-        self.selectedImage = 0
-
-        self.init_ui()
-        self.init_signals()
-
         # A counter variable that keeps track of the currently selected
         # image for the recipe
         # Initialized at 0 because we always start from the start.
         self.selectedImage = 0
+
+        self.init_ui()
+        self.init_signals()
 
 class RecipeWindow(QDialog):
     """
