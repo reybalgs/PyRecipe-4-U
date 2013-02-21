@@ -2,8 +2,8 @@
 #
 # mainwindow.py
 #
-# The mainwindow of the GUI. Displays overview recipe information, plus other
-# functionalities.
+# The mainwindow of the GUI. Displays overview recipe information, and recipe
+# details.
 #
 ###############################################################################
 
@@ -247,6 +247,28 @@ class MainWindow(QWidget):
         self.mainLayout = QVBoxLayout() # main layout
         self.buttonLayout = QHBoxLayout() # hor layout for buttons
 
+        # Create the menu bar
+        self.menuBar = QMenuBar(self)
+        # Create the different menus
+        self.fileMenu = QMenu("File", self)
+        self.editMenu = QMenu("Edit", self)
+        self.helpMenu = QMenu("Help", self)
+        # Add some basic actions for the menu bar. They don't do anything yet.
+        # TODO: Make these actions actually do something.
+        self.fileMenu.addAction("New Recipe")
+        self.fileMenu.addAction("Import Recipe")
+        self.fileMenu.addAction("Export Recipe")
+        self.fileMenu.addAction("Delete Recipe")
+        self.fileMenu.addAction("Exit")
+        self.editMenu.addAction("Details")
+        self.editMenu.addAction("Ingredients")
+        self.editMenu.addAction("Instructions")
+        self.helpMenu.addAction("About PyRecipe4U")
+        # Add the menus to the menu bar
+        self.menuBar.addMenu(self.fileMenu)
+        self.menuBar.addMenu(self.editMenu)
+        self.menuBar.addMenu(self.helpMenu)
+
         # Create the shinylist
         self.recipeList = ShinyList()
         # Tooltip for the shinylist
@@ -281,6 +303,9 @@ class MainWindow(QWidget):
         # Layouting
         # Time to link together the different UI components
         self.setLayout(self.mainLayout) # set the main layout
+
+        # Put the menubar in the main layout
+        self.mainLayout.addWidget(self.menuBar)
 
         # Put the shinylist in the main layout
         self.mainLayout.addWidget(self.recipeList)
