@@ -243,9 +243,11 @@ class MainWindow(QWidget):
         """
         # Creation
         # Creates UI components, but does not link them together yet.
-
+        
         self.mainLayout = QVBoxLayout() # main layout
         self.buttonLayout = QHBoxLayout() # hor layout for buttons
+        self.columnLayout = QHBoxLayout() # Hor layout for most of the stuff
+        self.listLayout = QVBoxLayout() # Layout for the list on the left
 
         # Create the menu bar
         self.menuBar = QMenuBar(self)
@@ -269,6 +271,7 @@ class MainWindow(QWidget):
         self.menuBar.addMenu(self.editMenu)
         self.menuBar.addMenu(self.helpMenu)
 
+        # Main components
         # Create the shinylist
         self.recipeList = ShinyList()
         # Tooltip for the shinylist
@@ -300,6 +303,19 @@ class MainWindow(QWidget):
         # buttons because no recipe has been selected yet
         self.disable_buttons()
 
+        ######################################################################
+        # Recipe overview items
+        ######################################################################
+        # Layouts
+        self.recipeOverviewLayout = QGridLayout()
+        
+        # Items and labels
+        self.nameData = QLineEdit(self)
+        self.courseData = QComboBox()
+        self.servingSizeData = QDoubleSpinBox(self)
+        self.ingredientsData = QTextBrowser()
+        self.instructionsData = QTextBrowser()
+
         # Layouting
         # Time to link together the different UI components
         self.setLayout(self.mainLayout) # set the main layout
@@ -307,11 +323,35 @@ class MainWindow(QWidget):
         # Put the menubar in the main layout
         self.mainLayout.addWidget(self.menuBar)
 
-        # Put the shinylist in the main layout
-        self.mainLayout.addWidget(self.recipeList)
+        # Put the column layout in the main layout
+        self.mainLayout.addLayout(self.columnLayout)
 
-        # Put the button layout in the main layout
-        self.mainLayout.addLayout(self.buttonLayout)
+        # Put the list layout in the first slot of the column layout
+        self.columnLayout.addLayout(self.listLayout)
+
+        # Put the recipe overview layout in the second slot of the column
+        # layout
+        self.columnLayout.addLayout(self.recipeOverviewLayout)
+
+        # Put the items and labels of a recipe into the recipe overview grid
+        # layout
+        self.recipeOverviewLayout.addWidget(QLabel("Recipe Name:"),
+                0, 0)
+        self.recipeOverviewLayout.addWidget(self.nameData, 0, 1)
+        self.recipeOverviewLayout.addWidget(QLabel("Course:"), 1, 0)
+        self.recipeOverviewLayout.addWidget(self.courseData, 1, 1)
+        self.recipeOverviewLayout.addWidget(QLabel("Serving Size:"), 2, 0)
+        self.recipeOverviewLayout.addWidget(self.servingSizeData, 2, 1)
+        self.recipeOverviewLayout.addWidget(QLabel("Ingredients:"), 3, 0)
+        self.recipeOverviewLayout.addWidget(self.ingredientsData, 3, 1)
+        self.recipeOverviewLayout.addWidget(QLabel("Instructions:"), 4, 0)
+        self.recipeOverviewLayout.addWidget(self.instructionsData, 4, 1)
+
+        # Put the shinylist in the list layout
+        self.listLayout.addWidget(self.recipeList)
+
+        # Put the button layout in the list layout
+        self.listLayout.addLayout(self.buttonLayout)
 
         # Put the buttons in the button layout
         self.buttonLayout.addWidget(self.addRecipeButton)
