@@ -26,17 +26,62 @@ from recipe import *
 # Generate shopping list dialog import
 from shopping_list import *
 
+# Ingredients window import
+from ingredients import *
+
+# Instructions window import
+from instructions import *
+
 # Qt App declaration
 app = QApplication(sys.argv)
 
 class MainWindow(QWidget):
     # The main window class, inherits QWidget
+    def edit_instructions(self):
+        """
+        Invokes the edit instructions window, where the user can edit the
+        instructions of the currently selected recipe
+        """
+        # Create the dialog
+        instructionsDialog = InstructionsWindow(self,
+                self.recipes[self.currentRecipe].instructions)
+
+        # Execute the dialog
+        instructionsDialog.exec_()
+
+        # Get the updated list of instructions from the dialog
+        self.recipes[self.currentRecipe].instructions = instructionsDialog.get_instructions()
+
+        # Refresh the list of instructions
+        self.refresh_instructions()
+
+    def edit_ingredients(self):
+        """
+        Invokes the edit ingredients window, where the user can edit the
+        ingredients of the currently selected recipe
+        """
+        # Create the dialog
+        ingredientsDialog = IngredientsWindow(self,
+                self.recipes[self.currentRecipe].ingredients)
+
+        # Execute the dialog
+        ingredientsDialog.exec_()
+
+        # Get the updated list of ingredients from the dialog
+        self.recipes[self.currentRecipe].ingredients = ingredientsDialog.get_ingredients()
+
+        # Refresh the list of ingredients
+        self.refresh_ingredients()
+
     def refresh_ingredients(self):
         """
         Refreshes the list of ingredients for the current selected recipe.
         """
         self.ingredientsData.clear() # clear the list first
         
+        # Let's check first if the recipe has any ingredients.
+        # If not, we will put a dummy entry in the ingredients so that the user
+        # can add one.
         counter = 1 # Counter variable
 
         # Put the text in the ingredients list
@@ -47,14 +92,19 @@ class MainWindow(QWidget):
                     ' ' + ingredient['unit'] + '\n')
             counter += 1
 
+        self.ingredientsData.addItem("+ Add an Ingredient")
+
     def refresh_instructions(self):
         """
         Refreshes the list of instructions for the current selected recipe.
         """
         self.instructionsData.clear() # clear the list
-
+        
+        # Let's check first if the recipe has any instructions.
+        # If not, we will put a dummy entry in the instructions so that the
+        # user can add one.
         counter = 1 # Counter variable
-
+    
         # Put text in the instructions list
         for instruction in self.recipes[self.currentRecipe].instructions:
             # Go through the list of instructions
@@ -62,24 +112,7 @@ class MainWindow(QWidget):
                 instruction + '\n')
             counter += 1
 
-    def enable_buttons(self):
-        """
-        Enables the Edit and Delete selected recipes buttons, two buttons that
-        are disabled on startup because they require an item in the list to be
-        selected before they can work.
-
-        Now also enables the Export Recipe button, because that also depends
-        on a recipe being selected first.
-        """
-        self.deleteRecipeButton.setEnabled(True)
-        self.exportRecipeButton.setEnabled(True)
-
-    def disable_buttons(self):
-        """
-        Does the exact opposite of the function enable_buttons().
-        """
-        self.deleteRecipeButton.setEnabled(False)
-        self.exportRecipeButton.setEnabled(False)
+        self.instructionsData.addItem("+ Add an Instruction")
 
     def add_recipe(self):
         """
@@ -290,7 +323,6 @@ class MainWindow(QWidget):
         # Creates UI components, but does not link them together yet.
         
         self.mainLayout = QVBoxLayout() # main layout
-        self.buttonLayout = QHBoxLayout() # hor layout for buttons
         self.columnLayout = QHBoxLayout() # Hor layout for most of the stuff
         self.listLayout = QVBoxLayout() # Layout for the list on the left
 
@@ -302,10 +334,25 @@ class MainWindow(QWidget):
         self.helpMenu = QMenu("Help", self)
         # Add some basic actions for the menu bar. They don't do anything yet.
         # TODO: Make these actions actually do something.
-        self.fileMenu.addAction("New Recipe")
-        self.fileMenu.addAction("Import Recipe")
-        self.fileMenu.addAction("Export Recipe")
-        self.fileMenu.addAction("Delete Recipe")
+        # Actions for menu and possibly one of the toolbars
+        self.newRecipeAct = QAction("New Recipe...", self)
+        self.importRecipeAct = QAction("Import Recipe...", self)
+        self.exportRecipeAct = QAction("Export Recipe...", self)
+        self.deleteRecipeAct = QAction("Delete Recipe...", self)
+        # Connect the actions to their respective slots
+        self.connect(self.newRecipeAct, SIGNAL("triggered()"), self,
+                SLOT("add_recipe()"))
+        self.connect(self.importRecipeAct, SIGNAL("triggered()"), self,
+                SLOT("import_recipe()"))
+        self.connect(self.exportRecipeAct, SIGNAL("triggered()"), self,
+                SLOT("export_recipe()"))
+        self.connect(self.deleteRecipeAct, SIGNAL("triggered()"), self,
+                SLOT("delete_recipe()"))
+
+        self.fileMenu.addAction(self.newRecipeAct)
+        self.fileMenu.addAction(self.importRecipeAct)
+        self.fileMenu.addAction(self.exportRecipeAct)
+        self.fileMenu.addAction(self.deleteRecipeAct)
         self.fileMenu.addAction("Exit")
         self.editMenu.addAction("Details")
         self.editMenu.addAction("Ingredients")
@@ -323,30 +370,12 @@ class MainWindow(QWidget):
         self.recipeList.setToolTip("Double-click a recipe to view and edit " +
                 "its contents.")
 
-        # Add recipe button
-        self.addRecipeButton = QPushButton("Add", self)
-        # Tooltip for add recipe
-        self.addRecipeButton.setToolTip("Create and add a new " +
-                "recipe into the database.")
-        # Delete recipe button
-        self.deleteRecipeButton = QPushButton("Delete", self)
-        # Tooltip for delete recipe
-        self.deleteRecipeButton.setToolTip("Deletes the selected " +
-                "recipe from the database.")
-        # Import Recipe button
-        self.importRecipeButton = QPushButton("Import", self)
-        # Tooltip for import recipe
-        self.importRecipeButton.setToolTip("Loads a .rcpe recipe " +
-                "file from your filesystem.")
-        # Export Recipe button
-        self.exportRecipeButton = QPushButton("Export", self)
-        # Tooltip for export recipe
-        self.exportRecipeButton.setToolTip("Saves the selected " +
-                "recipe to a .rcpe recipe file on your filesystem.")
-
-        # Disable the edit, delete, generate shopping list and export recipe
-        # buttons because no recipe has been selected yet
-        self.disable_buttons()
+        # The toolbar for the shinylist
+        self.listTools = QToolBar()
+        self.listTools.addAction(self.newRecipeAct)
+        self.listTools.addAction(self.importRecipeAct)
+        self.listTools.addAction(self.exportRecipeAct)
+        self.listTools.addAction(self.deleteRecipeAct)
 
         ######################################################################
         # Recipe overview items
@@ -367,17 +396,6 @@ class MainWindow(QWidget):
         self.ingredientsData.setWordWrap(True)
         self.instructionsData.setWordWrap(True)
         
-        # Layouts and buttons for ingredients and instructions
-        self.ingredientsTools = QToolBar()
-        self.instructionsTools = QToolBar()
-
-        # Add the necessary actions for the toolbars
-        # TODO: Make them actually do something
-        self.ingredientsTools.addAction("Add")
-        self.ingredientsTools.addAction("Delete")
-        self.instructionsTools.addAction("Add")
-        self.instructionsTools.addAction("Delete")
-
         # Layouting
         # Time to link together the different UI components
         self.setLayout(self.mainLayout) # set the main layout
@@ -406,36 +424,21 @@ class MainWindow(QWidget):
         self.recipeOverviewLayout.addWidget(self.servingSizeData, 2, 1)
         self.recipeOverviewLayout.addWidget(QLabel("Ingredients:"), 3, 0)
         self.recipeOverviewLayout.addWidget(self.ingredientsData, 3, 1)
-        self.recipeOverviewLayout.addWidget(self.ingredientsTools, 4, 1)
-        self.recipeOverviewLayout.addWidget(QLabel("Instructions:"), 5, 0)
-        self.recipeOverviewLayout.addWidget(self.instructionsData, 5, 1)
-        self.recipeOverviewLayout.addWidget(self.instructionsTools, 6, 1)
+        self.recipeOverviewLayout.addWidget(QLabel("Instructions:"), 4, 0)
+        self.recipeOverviewLayout.addWidget(self.instructionsData, 4, 1)
 
         # Put the shinylist in the list layout
         self.listLayout.addWidget(self.recipeList)
+        # Put the shinylist tools in the list layout
+        self.listLayout.addWidget(self.listTools)
 
-        # Put the button layout in the list layout
-        self.listLayout.addLayout(self.buttonLayout)
-
-        # Put the buttons in the button layout
-        self.buttonLayout.addWidget(self.addRecipeButton)
-        self.buttonLayout.addWidget(self.deleteRecipeButton)
-        self.buttonLayout.addWidget(self.importRecipeButton)
-        self.buttonLayout.addWidget(self.exportRecipeButton)
-        
         # Initialize the buttons signals and slots
-        self.addRecipeButton.clicked.connect(self.add_recipe)
         # Signal for when an item is clicked in the shinylist
-        self.recipeList.clicked.connect(self.enable_buttons)
         self.recipeList.clicked.connect(self.refresh_recipe_info)
-        # Signal when an item is double-clicked
-        self.recipeList.doubleClicked.connect(self.open_recipe)
-        # Signal to delete a recipe when the delete recipe button is clicked
-        self.deleteRecipeButton.clicked.connect(self.delete_recipe)
-        # Signal to import a recipe
-        self.importRecipeButton.clicked.connect(self.import_recipe)
-        # Signal to export a recipe
-        self.exportRecipeButton.clicked.connect(self.export_recipe)
+        # Signals for when an ingredient is double-clicked
+        self.ingredientsData.doubleClicked.connect(self.edit_ingredients)
+        # Signals for when an instruction is double-clicked
+        self.instructionsData.doubleClicked.connect(self.edit_instructions)
 
         # Set the window title
         self.setWindowTitle("PyRecipe-4-U")
@@ -455,11 +458,10 @@ class MainWindow(QWidget):
 
         print 'Initializing UI...' # some debug messages
 
-        self.init_ui() # Initialize the ui
-
         # Create list of recipes
         self.recipes = []
         # A variable to track the current recipe selected
         self.currentRecipe = 0
         # Create a list of shinylist items
         self.shinyListItems = []
+        self.init_ui() # Initialize the ui
