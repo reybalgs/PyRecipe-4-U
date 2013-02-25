@@ -366,6 +366,17 @@ class MainWindow(QWidget):
         # Set wrapping for the instructions and ingredients
         self.ingredientsData.setWordWrap(True)
         self.instructionsData.setWordWrap(True)
+        
+        # Layouts and buttons for ingredients and instructions
+        self.ingredientsTools = QToolBar()
+        self.instructionsTools = QToolBar()
+
+        # Add the necessary actions for the toolbars
+        # TODO: Make them actually do something
+        self.ingredientsTools.addAction("Add")
+        self.ingredientsTools.addAction("Delete")
+        self.instructionsTools.addAction("Add")
+        self.instructionsTools.addAction("Delete")
 
         # Layouting
         # Time to link together the different UI components
@@ -395,8 +406,10 @@ class MainWindow(QWidget):
         self.recipeOverviewLayout.addWidget(self.servingSizeData, 2, 1)
         self.recipeOverviewLayout.addWidget(QLabel("Ingredients:"), 3, 0)
         self.recipeOverviewLayout.addWidget(self.ingredientsData, 3, 1)
-        self.recipeOverviewLayout.addWidget(QLabel("Instructions:"), 4, 0)
-        self.recipeOverviewLayout.addWidget(self.instructionsData, 4, 1)
+        self.recipeOverviewLayout.addWidget(self.ingredientsTools, 4, 1)
+        self.recipeOverviewLayout.addWidget(QLabel("Instructions:"), 5, 0)
+        self.recipeOverviewLayout.addWidget(self.instructionsData, 5, 1)
+        self.recipeOverviewLayout.addWidget(self.instructionsTools, 6, 1)
 
         # Put the shinylist in the list layout
         self.listLayout.addWidget(self.recipeList)
