@@ -31,6 +31,37 @@ app = QApplication(sys.argv)
 
 class MainWindow(QWidget):
     # The main window class, inherits QWidget
+    def refresh_ingredients(self):
+        """
+        Refreshes the list of ingredients for the current selected recipe.
+        """
+        self.ingredientsData.clear() # clear the list first
+        
+        counter = 1 # Counter variable
+
+        # Put the text in the ingredients list
+        for ingredient in self.recipes[self.currentRecipe].ingredients:
+            # Go through the list of ingredients
+            self.ingredientsData.insertPlainText(str(counter) + '. ' +
+                    ingredient['name'] + ': ' + str(ingredient['quantity']) +
+                    ' ' + ingredient['unit'] + '\n')
+            counter += 1
+
+    def refresh_instructions(self):
+        """
+        Refreshes the list of instructions for the current selected recipe.
+        """
+        self.instructionsData.clear() # clear the list
+
+        counter = 1 # Counter variable
+
+        # Put text in the instructions list
+        for instruction in self.recipes[self.currentRecipe].instructions:
+            # Go through the list of instructions
+            self.instructionsData.insertPlainText(str(counter) + '. ' +
+                instruction + '\n')
+            counter += 1
+
     def enable_buttons(self):
         """
         Enables the Edit and Delete selected recipes buttons, two buttons that
@@ -175,21 +206,35 @@ class MainWindow(QWidget):
             print file.read()
             file.close()
 
+    def refresh_recipe_info(self):
+        """
+        Refreshes the recipe details displayed according to the current recipe
+        variable
+        """
+        self.nameData.setText(self.recipes[self.currentRecipe].name)
+        # Set the course data according to the recipe's course data
+        if(self.recipes[self.currentRecipe].course == 'Appetizer'):
+            self.courseData.setCurrentIndex(0)
+        elif(self.recipes[self.currentRecipe].course == 'Main'):
+            self.courseData.setCurrentIndex(1)
+        elif(self.recipes[self.currentRecipe].course == 'Dessert'):
+            self.courseData.setCurrentIndex(2)
+        else:
+            print('Error! Wrong course data in recipe!')
+        self.servingSizeData.setValue(
+                self.recipes[self.currentRecipe].servingSize)
+
+        self.refresh_ingredients()
+        self.refresh_instructions()
+
     def open_recipe(self):
         """
-        Opens up a concise and detailed dialog containing essential
-        information about the double-clicked recipe.
         """
         # Get the index of the selected recipe
         index = self.recipeList.currentIndex().row()
 
         # Get the recipe based on that index
         recipe = self.recipes[index]
-
-        # Create a recipe overview dialog, pass the recipe to it
-        recipeDialog = RecipeOverview(self, recipe)
-        # Execute that dialog
-        recipeDialog.exec_()
 
         # Get the recipe from the dialog
         recipe = recipeDialog.get_recipe()
@@ -312,6 +357,9 @@ class MainWindow(QWidget):
         # Items and labels
         self.nameData = QLineEdit(self)
         self.courseData = QComboBox()
+        self.courseData.insertItem(0, "Appetizer")
+        self.courseData.insertItem(1, "Main")
+        self.courseData.insertItem(2, "Dessert")
         self.servingSizeData = QDoubleSpinBox(self)
         self.ingredientsData = QTextBrowser()
         self.instructionsData = QTextBrowser()
@@ -363,6 +411,7 @@ class MainWindow(QWidget):
         self.addRecipeButton.clicked.connect(self.add_recipe)
         # Signal for when an item is clicked in the shinylist
         self.recipeList.clicked.connect(self.enable_buttons)
+        self.recipeList.clicked.connect(self.refresh_recipe_info)
         # Signal when an item is double-clicked
         self.recipeList.doubleClicked.connect(self.open_recipe)
         # Signal to delete a recipe when the delete recipe button is clicked
@@ -394,5 +443,7 @@ class MainWindow(QWidget):
 
         # Create list of recipes
         self.recipes = []
+        # A variable to track the current recipe selected
+        self.currentRecipe = 0
         # Create a list of shinylist items
         self.shinyListItems = []
