@@ -339,6 +339,12 @@ class MainWindow(QWidget):
         self.importRecipeAct = QAction("Import Recipe...", self)
         self.exportRecipeAct = QAction("Export Recipe...", self)
         self.deleteRecipeAct = QAction("Delete Recipe...", self)
+        # Keybinds for the different actions
+        # These are platform dependent!
+        self.newRecipeAct.setShortcuts(QKeySequence.New)
+        self.importRecipeAct.setShortcuts(QKeySequence.Open)
+        self.exportRecipeAct.setShortcuts(QKeySequence.SaveAs)
+        self.deleteRecipeAct.setShortcuts(QKeySequence.Delete)
         # Connect the actions to their respective slots
         self.connect(self.newRecipeAct, SIGNAL("triggered()"), self,
                 SLOT("add_recipe()"))
