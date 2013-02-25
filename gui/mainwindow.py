@@ -42,7 +42,7 @@ class MainWindow(QWidget):
         # Put the text in the ingredients list
         for ingredient in self.recipes[self.currentRecipe].ingredients:
             # Go through the list of ingredients
-            self.ingredientsData.insertPlainText(str(counter) + '. ' +
+            self.ingredientsData.addItem(str(counter) + '. ' +
                     ingredient['name'] + ': ' + str(ingredient['quantity']) +
                     ' ' + ingredient['unit'] + '\n')
             counter += 1
@@ -58,7 +58,7 @@ class MainWindow(QWidget):
         # Put text in the instructions list
         for instruction in self.recipes[self.currentRecipe].instructions:
             # Go through the list of instructions
-            self.instructionsData.insertPlainText(str(counter) + '. ' +
+            self.instructionsData.addItem(str(counter) + '. ' +
                 instruction + '\n')
             counter += 1
 
@@ -361,8 +361,11 @@ class MainWindow(QWidget):
         self.courseData.insertItem(1, "Main")
         self.courseData.insertItem(2, "Dessert")
         self.servingSizeData = QDoubleSpinBox(self)
-        self.ingredientsData = QTextBrowser()
-        self.instructionsData = QTextBrowser()
+        self.ingredientsData = QListWidget()
+        self.instructionsData = QListWidget()
+        # Set wrapping for the instructions and ingredients
+        self.ingredientsData.setWordWrap(True)
+        self.instructionsData.setWordWrap(True)
 
         # Layouting
         # Time to link together the different UI components
