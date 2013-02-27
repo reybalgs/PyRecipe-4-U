@@ -37,6 +37,23 @@ app = QApplication(sys.argv)
 
 class MainWindow(QWidget):
     # The main window class, inherits QWidget
+    def shinylist_click(self):
+        """
+        SLOT function called whenever an item is clicked on the shinylist.
+        Calls the two other functions.
+        """
+        self.refresh_current_recipe()
+        self.refresh_recipe_info()
+
+    def refresh_current_recipe(self):
+        """
+        Updates the current recipe selected according to the item selected by
+        the user
+        """
+        # Get the currently selected item from the shinylist and put it in the
+        # tracking variable
+        self.currentRecipe = (self.recipeList.currentIndex()).row()
+
     def edit_instructions(self):
         """
         Invokes the edit instructions window, where the user can edit the
@@ -440,7 +457,7 @@ class MainWindow(QWidget):
 
         # Initialize the buttons signals and slots
         # Signal for when an item is clicked in the shinylist
-        self.recipeList.clicked.connect(self.refresh_recipe_info)
+        self.recipeList.clicked.connect(self.shinylist_click)
         # Signals for when an ingredient is double-clicked
         self.ingredientsData.doubleClicked.connect(self.edit_ingredients)
         # Signals for when an instruction is double-clicked
