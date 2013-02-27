@@ -445,15 +445,21 @@ class MainWindow(QWidget):
         # Generate shopping list items
         ######################################################################
         self.shoppingImagesLayout = QVBoxLayout()
-        self.generateShoppingListLayout = QGridLayout()
-        self.generateShoppingListGroup = QGroupBox("Generate Shopping List")
+        self.shoppingListLayout = QGridLayout()
+        self.shoppingListGroup = QGroupBox("Generate Shopping List")
 
-        self.generateShoppingListGroup.setLayout(
-                self.generateShoppingListLayout)
+        self.generateServingSize = QDoubleSpinBox()
+        self.generatedList = QTextBrowser()
+
+        self.shoppingListGroup.setLayout(self.shoppingListLayout)
         generateInstructions = QLabel("Automatically calculate the amount " +
                 "of ingredients needed given the serving size provided.")
         generateInstructions.setWordWrap(True)
-        self.generateShoppingListLayout.addWidget(generateInstructions, 0, 1)
+        self.shoppingListLayout.addWidget(generateInstructions, 0, 1)
+        self.shoppingListLayout.addWidget(QLabel("Serving Size"), 1, 0)
+        self.shoppingListLayout.addWidget(self.generateServingSize, 1, 1)
+        self.shoppingListLayout.addWidget(QLabel("You will need"), 2, 0)
+        self.shoppingListLayout.addWidget(self.generatedList)
 
         ######################################################################
         # Images items
@@ -509,7 +515,7 @@ class MainWindow(QWidget):
         self.columnLayout.addLayout(self.shoppingImagesLayout)
 
         # Put the shopping list and images into their respective layouts
-        self.shoppingImagesLayout.addWidget(self.generateShoppingListGroup)
+        self.shoppingImagesLayout.addWidget(self.shoppingListGroup)
         self.shoppingImagesLayout.addWidget(self.imageGroup)
 
         # Put the items and labels of a recipe into the recipe overview grid
