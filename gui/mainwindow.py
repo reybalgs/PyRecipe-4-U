@@ -362,16 +362,23 @@ class MainWindow(QWidget):
         # Add some basic actions for the menu bar. They don't do anything yet.
         # TODO: Make these actions actually do something.
         # Actions for menu and possibly one of the toolbars
-        self.newRecipeAct = QAction("New Recipe...", self)
-        self.importRecipeAct = QAction("Import Recipe...", self)
-        self.exportRecipeAct = QAction("Export Recipe...", self)
-        self.deleteRecipeAct = QAction("Delete Recipe...", self)
+        self.newRecipeAct = QAction(QIcon().fromTheme("document-new"), "New Recipe...", 
+                self)
+        self.importRecipeAct = QAction(QIcon().fromTheme("document-open"), 
+                "Import Recipe...", self)
+        self.exportRecipeAct = QAction(QIcon().fromTheme("document-save-as"), 
+                "Export Recipe...", self)
+        self.deleteRecipeAct = QAction(QIcon().fromTheme("edit-delete"), 
+                "Delete Recipe...", self)
+        self.quitAct = QAction(QIcon().fromTheme("application-exit"),
+                "Quit...", self)
         # Keybinds for the different actions
         # These are platform dependent!
         self.newRecipeAct.setShortcuts(QKeySequence.New)
         self.importRecipeAct.setShortcuts(QKeySequence.Open)
         self.exportRecipeAct.setShortcuts(QKeySequence.SaveAs)
         self.deleteRecipeAct.setShortcuts(QKeySequence.Delete)
+        self.quitAct.setShortcuts(QKeySequence.Quit)
         # Connect the actions to their respective slots
         self.connect(self.newRecipeAct, SIGNAL("triggered()"), self,
                 SLOT("add_recipe()"))
@@ -381,12 +388,14 @@ class MainWindow(QWidget):
                 SLOT("export_recipe()"))
         self.connect(self.deleteRecipeAct, SIGNAL("triggered()"), self,
                 SLOT("delete_recipe()"))
+        self.connect(self.quitAct, SIGNAL("triggered()"), self,
+                SLOT("close()"))
 
         self.fileMenu.addAction(self.newRecipeAct)
         self.fileMenu.addAction(self.importRecipeAct)
         self.fileMenu.addAction(self.exportRecipeAct)
         self.fileMenu.addAction(self.deleteRecipeAct)
-        self.fileMenu.addAction("Exit")
+        self.fileMenu.addAction(self.quitAct)
         self.editMenu.addAction("Details")
         self.editMenu.addAction("Ingredients")
         self.editMenu.addAction("Instructions")
