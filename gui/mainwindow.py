@@ -425,6 +425,7 @@ class MainWindow(QWidget):
         # Recipe overview items
         ######################################################################
         # Layouts
+        self.recipeOverviewGroup = QGroupBox("Recipe Details")
         self.recipeOverviewLayout = QGridLayout()
         
         # Items and labels
@@ -453,22 +454,27 @@ class MainWindow(QWidget):
         # Put the list layout in the first slot of the column layout
         self.columnLayout.addLayout(self.listLayout)
 
-        # Put the recipe overview layout in the second slot of the column
-        # layout
-        self.columnLayout.addLayout(self.recipeOverviewLayout)
+        # Put the groupbox in the second column
+        self.columnLayout.addWidget(self.recipeOverviewGroup)
+        # Assign the layout to the group
+        self.recipeOverviewGroup.setLayout(self.recipeOverviewLayout)
 
         # Put the items and labels of a recipe into the recipe overview grid
         # layout
-        self.recipeOverviewLayout.addWidget(QLabel("Recipe Name:"),
+        self.recipeOverviewLayout.addWidget(QLabel("Recipe Name"),
                 0, 0)
         self.recipeOverviewLayout.addWidget(self.nameData, 0, 1)
-        self.recipeOverviewLayout.addWidget(QLabel("Course:"), 1, 0)
+        self.recipeOverviewLayout.addWidget(QLabel("Course"), 1, 0)
         self.recipeOverviewLayout.addWidget(self.courseData, 1, 1)
-        self.recipeOverviewLayout.addWidget(QLabel("Serving Size:"), 2, 0)
+        self.recipeOverviewLayout.addWidget(QLabel("Serving Size"), 2, 0)
         self.recipeOverviewLayout.addWidget(self.servingSizeData, 2, 1)
-        self.recipeOverviewLayout.addWidget(QLabel("Ingredients:"), 3, 0)
+        ingredientLabel = QLabel("Ingredients")
+        ingredientLabel.setAlignment(Qt.AlignTop)
+        self.recipeOverviewLayout.addWidget(ingredientLabel, 3, 0)
         self.recipeOverviewLayout.addWidget(self.ingredientsData, 3, 1)
-        self.recipeOverviewLayout.addWidget(QLabel("Instructions:"), 4, 0)
+        instructionLabel = QLabel("Instructions")
+        instructionLabel.setAlignment(Qt.AlignTop)
+        self.recipeOverviewLayout.addWidget(instructionLabel, 4, 0)
         self.recipeOverviewLayout.addWidget(self.instructionsData, 4, 1)
 
         # Put the shinylist in the list layout
