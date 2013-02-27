@@ -54,6 +54,7 @@ class MainWindow(QWidget):
         """
         self.refresh_current_recipe()
         self.refresh_recipe_info()
+        self.refresh_image()
 
     def refresh_current_recipe(self):
         """
@@ -81,6 +82,12 @@ class MainWindow(QWidget):
 
         # Refresh the list of instructions
         self.refresh_instructions()
+
+    def refresh_image(self):
+        """
+        Refreshes the image to the currently selected
+        """
+        self.imageLabel.setPixmap(self.recipes[self.currentRecipe].images[self.currentImage])
 
     def edit_ingredients(self):
         """
@@ -485,8 +492,7 @@ class MainWindow(QWidget):
         self.imageTools.addAction(self.nextImageAct)
 
         self.imageLabel = QLabel()
-        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png").
-                scaledToWidth(320))
+        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
         self.imageLabel.setScaledContents(True)
 
         self.imageLayout.addWidget(self.imageLabel)
@@ -570,6 +576,8 @@ class MainWindow(QWidget):
         self.recipes = []
         # A variable to track the current recipe selected
         self.currentRecipe = 0
+        # A variable that tracks the current image of the recipe selected
+        self.currentImage = 0
         # Create a list of shinylist items
         self.shinyListItems = []
         self.init_ui() # Initialize the ui
