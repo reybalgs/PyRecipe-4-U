@@ -362,8 +362,8 @@ class MainWindow(QWidget):
         # Add some basic actions for the menu bar. They don't do anything yet.
         # TODO: Make these actions actually do something.
         # Actions for menu and possibly one of the toolbars
-        self.newRecipeAct = QAction(QIcon().fromTheme("document-new"), "New Recipe...", 
-                self)
+        self.newRecipeAct = QAction(QIcon().fromTheme("document-new"), 
+                "New Recipe...", self)
         self.importRecipeAct = QAction(QIcon().fromTheme("document-open"), 
                 "Import Recipe...", self)
         self.exportRecipeAct = QAction(QIcon().fromTheme("document-save-as"), 
@@ -395,10 +395,12 @@ class MainWindow(QWidget):
         self.fileMenu.addAction(self.importRecipeAct)
         self.fileMenu.addAction(self.exportRecipeAct)
         self.fileMenu.addAction(self.deleteRecipeAct)
+        self.fileMenu.addSeparator()
+        self.fileMenu.addAction("Generate Shopping List")
         self.fileMenu.addAction(self.quitAct)
-        self.editMenu.addAction("Details")
         self.editMenu.addAction("Ingredients")
         self.editMenu.addAction("Instructions")
+        self.editMenu.addAction("Images")
         self.helpMenu.addAction("About PyRecipe4U")
         # Add the menus to the menu bar
         self.menuBar.addMenu(self.fileMenu)
@@ -485,7 +487,6 @@ class MainWindow(QWidget):
         # Set the window title
         self.setWindowTitle("PyRecipe-4-U")
         self.show() # Show the window
-
 
     def __init__(self, parent=None):
         """
