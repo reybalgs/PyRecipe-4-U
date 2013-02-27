@@ -37,6 +37,16 @@ app = QApplication(sys.argv)
 
 class MainWindow(QWidget):
     # The main window class, inherits QWidget
+    def clear_data(self):
+        """
+        Clears the data fields.
+        """
+        self.nameData.setText("")
+        self.courseData.setCurrentIndex(-1)
+        self.servingSizeData.setValue(0.0)
+        self.ingredientsData.clear()
+        self.instructionsData.clear()
+        
     def shinylist_click(self):
         """
         SLOT function called whenever an item is clicked on the shinylist.
@@ -328,8 +338,8 @@ class MainWindow(QWidget):
         # Reinitialize the list
         self.refresh_list()
 
-        # Disable the buttons that have to be disabled
-        self.disable_buttons()
+        # Clean the fields
+        self.clear_data()
 
     def init_ui(self):
         """
