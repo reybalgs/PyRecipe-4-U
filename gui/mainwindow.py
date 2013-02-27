@@ -458,16 +458,34 @@ class MainWindow(QWidget):
         ######################################################################
         # Images items
         ######################################################################
-        self.imageLayout = QGridLayout()
+        self.imageLayout = QVBoxLayout()
         self.imageGroup = QGroupBox("Images")
+        self.imageTools = QToolBar()
+
+        # Image manipulation actions
+        self.nextImageAct = QAction(QIcon().fromTheme("go-next"),
+                "Next Image", self)
+        self.prevImageAct = QAction(QIcon().fromTheme("go-previous"),
+                "Preview Image", self)
+        self.newImageAct = QAction(QIcon().fromTheme("list-add"), "New Image",
+                self)
+        self.deleteImageAct = QAction(QIcon().fromTheme("edit-delete"),
+                "Remove Image", self)
+
+        # Add the actions into the toolbar
+        self.imageTools.addAction(self.prevImageAct)
+        self.imageTools.addAction(self.newImageAct)
+        self.imageTools.addAction(self.deleteImageAct)
+        self.imageTools.addAction(self.nextImageAct)
 
         self.imageLabel = QLabel()
         self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png").
                 scaledToWidth(320))
         self.imageLabel.setScaledContents(True)
 
+        self.imageLayout.addWidget(self.imageLabel)
+        self.imageLayout.addWidget(self.imageTools)
         self.imageGroup.setLayout(self.imageLayout)
-        self.imageLayout.addWidget(self.imageLabel, 0, 2)
         
         # Layouting
         # Time to link together the different UI components
