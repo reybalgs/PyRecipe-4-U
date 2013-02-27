@@ -440,6 +440,34 @@ class MainWindow(QWidget):
         # Set wrapping for the instructions and ingredients
         self.ingredientsData.setWordWrap(True)
         self.instructionsData.setWordWrap(True)
+
+        ######################################################################
+        # Generate shopping list items
+        ######################################################################
+        self.shoppingImagesLayout = QVBoxLayout()
+        self.generateShoppingListLayout = QGridLayout()
+        self.generateShoppingListGroup = QGroupBox("Generate Shopping List")
+
+        self.generateShoppingListGroup.setLayout(
+                self.generateShoppingListLayout)
+        generateInstructions = QLabel("Automatically calculate the amount " +
+                "of ingredients needed given the serving size provided.")
+        generateInstructions.setWordWrap(True)
+        self.generateShoppingListLayout.addWidget(generateInstructions, 0, 1)
+
+        ######################################################################
+        # Images items
+        ######################################################################
+        self.imageLayout = QGridLayout()
+        self.imageGroup = QGroupBox("Images")
+
+        self.imageLabel = QLabel()
+        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png").
+                scaledToWidth(320))
+        self.imageLabel.setScaledContents(True)
+
+        self.imageGroup.setLayout(self.imageLayout)
+        self.imageLayout.addWidget(self.imageLabel, 0, 2)
         
         # Layouting
         # Time to link together the different UI components
@@ -458,6 +486,13 @@ class MainWindow(QWidget):
         self.columnLayout.addWidget(self.recipeOverviewGroup)
         # Assign the layout to the group
         self.recipeOverviewGroup.setLayout(self.recipeOverviewLayout)
+
+        # Put the right column items into the third column
+        self.columnLayout.addLayout(self.shoppingImagesLayout)
+
+        # Put the shopping list and images into their respective layouts
+        self.shoppingImagesLayout.addWidget(self.generateShoppingListGroup)
+        self.shoppingImagesLayout.addWidget(self.imageGroup)
 
         # Put the items and labels of a recipe into the recipe overview grid
         # layout
