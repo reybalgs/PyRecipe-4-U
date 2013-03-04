@@ -83,6 +83,83 @@ class MainWindow(QWidget):
         # Refresh the list of instructions
         self.refresh_instructions()
 
+    def next_image(self):
+        """
+        Moves to the next image in the recipe's array of images.
+        """
+        if len(self.recipes[self.currentRecipe].images) > 1:
+            # The recipe has images to go to
+            if (self.currentRecipe < 
+                    (len(self.recipes[self.currentRecipe].images) - 1)):
+                # We are not at the end of the list, we can move forward
+                # Increment the selected image variable
+                self.currentImage += 1
+                # Change the displayed image
+                self.refresh_image()
+            else:
+                print('Already at the end of images list')
+
+    def previous_image(self):
+        """
+        Moves to the previous image in the recipe's array of images.
+        """
+        if len(self.recipes[self.currentRecipe].images) > 1:
+            # The recipe has images to go to
+            if self.currentImage > 0:
+                # We are not at the beginning of the image list so we can move
+                # back at least once
+                # Decrement the selected image
+                self.currentImage -= 1
+                # Change the displayed image
+                self.refresh_image()
+            else:
+                print('Already at the beginning of the list!')
+
+    def import_image(self):
+        """
+        Imports a new image for the currently selected recipe
+        """
+        # A var containing a list of images
+        files = ''
+        # Invoke a filedialog that will look for the images
+        fileDialog = QFileDialog(self, "Import Image", "./gui/images")
+        fileDialog.setFileMode(QFileDialog.ExistingFile)
+
+        if fileDialog.exec_():
+            # Get the selected files from the dialog
+            files = fileDialog.selectedFiles()
+
+        # Now let's loop through the list of files and put them into the list
+        # of images
+        for image in files:
+            if ((image) and (image.lower().endswith(('.png', '.jpg', '.jpeg',
+                    '.gif', '.bmp')))):
+                # There is an image found, add it to the list of images
+                self.recipes[self.currentImage].images.append(image)
+        
+        # Set the selected image into the last image in the list
+        self.currentImage = (len(self.recipes[self.currentRecipe].images) - 1)
+        # Refresh the displayed image
+        self.refresh_image()
+
+    def delete_image(self):
+        """ Deletes the currently selected image """
+        # TODO: Create a dialog that asks for confirmation from the user
+        # Delete the image from the list of images
+        deleted = (self.recipes[self.currentRecipe].
+                images.pop(self.currentImage))
+        # Check whether we are at the end of the images list
+        if(self.currentImage == len(self.recipes[self.currentRecipe].images)):
+            # Move back the currently selected image
+            self.currentImage -= 1
+        # Let's check if we still have any images, if not, use a placeholder
+        if(len(self.recipes[self.currentRecipe].images) == 0):
+            self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
+            self.currentImage = 0
+        else:
+            # We still have an image, refresh the selected image
+            self.refresh_image()
+
     def refresh_image(self):
         """
         Refreshes the image to the currently selected
@@ -484,6 +561,16 @@ class MainWindow(QWidget):
                 self)
         self.deleteImageAct = QAction(QIcon().fromTheme("edit-delete"),
                 "Remove Image", self)
+
+        # Signals and slots for these image actions
+        self.connect(self.nextImageAct, SIGNAL("triggered()"), self,
+                SLOT("self.next_image()"))
+        self.connect(self.prevImageAct, SIGNAL("triggered()"), self,
+                SLOT("self.previous_image()"))
+        self.connect(self.newImageAct, SIGNAL("triggered()"), self,
+                SLOT("self.import_image()"))
+        self.connect(self.deleteImageAct, SIGNAL("triggered()"), self,
+                SLOT("self.delete_image()"))
 
         # Add the actions into the toolbar
         self.imageTools.addAction(self.prevImageAct)
