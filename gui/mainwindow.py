@@ -87,9 +87,11 @@ class MainWindow(QWidget):
         """
         Moves to the next image in the recipe's array of images.
         """
+        print('Images list length is ' +
+                str(len(self.recipes[self.currentRecipe].images)))
         if len(self.recipes[self.currentRecipe].images) > 1:
             # The recipe has images to go to
-            if (self.currentRecipe < 
+            if (self.currentImage <
                     (len(self.recipes[self.currentRecipe].images) - 1)):
                 # We are not at the end of the list, we can move forward
                 # Increment the selected image variable
@@ -98,11 +100,14 @@ class MainWindow(QWidget):
                 self.refresh_image()
             else:
                 print('Already at the end of images list')
+        print('New images index is ' + str(self.currentImage))
 
     def previous_image(self):
         """
         Moves to the previous image in the recipe's array of images.
         """
+        print('Images list length is ' +
+                str(len(self.recipes[self.currentRecipe].images)))
         if len(self.recipes[self.currentRecipe].images) > 1:
             # The recipe has images to go to
             if self.currentImage > 0:
@@ -114,6 +119,7 @@ class MainWindow(QWidget):
                 self.refresh_image()
             else:
                 print('Already at the beginning of the list!')
+        print('New images index is ' + str(self.currentImage))
 
     def import_image(self):
         """
@@ -135,7 +141,7 @@ class MainWindow(QWidget):
             if ((image) and (image.lower().endswith(('.png', '.jpg', '.jpeg',
                     '.gif', '.bmp')))):
                 # There is an image found, add it to the list of images
-                self.recipes[self.currentImage].images.append(image)
+                self.recipes[self.currentRecipe].images.append(image)
         
         # Set the selected image into the last image in the list
         self.currentImage = (len(self.recipes[self.currentRecipe].images) - 1)
@@ -154,17 +160,18 @@ class MainWindow(QWidget):
             self.currentImage -= 1
         # Let's check if we still have any images, if not, use a placeholder
         if(len(self.recipes[self.currentRecipe].images) == 0):
-            self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
             self.currentImage = 0
-        else:
-            # We still have an image, refresh the selected image
-            self.refresh_image()
+        self.refresh_image()
 
     def refresh_image(self):
         """
         Refreshes the image to the currently selected
         """
-        self.imageLabel.setPixmap(self.recipes[self.currentRecipe].images[self.currentImage])
+        # Use a placeholder if there are no images in the recipe
+        if(len(self.recipes[self.currentRecipe].images) == 0):
+            self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
+        else:
+            self.imageLabel.setPixmap(self.recipes[self.currentRecipe].images[self.currentImage])
 
     def edit_ingredients(self):
         """
@@ -251,7 +258,7 @@ class MainWindow(QWidget):
 
             # Add the item to the shinylist
             self.recipeList.add_item(item)
-            print 'Item added to shinylist'
+            print('Item added to shinylist')
 
             # Add the item to the list of shinylist items
             self.shinyListItems.append(item)
@@ -564,13 +571,13 @@ class MainWindow(QWidget):
 
         # Signals and slots for these image actions
         self.connect(self.nextImageAct, SIGNAL("triggered()"), self,
-                SLOT("self.next_image()"))
+                SLOT("next_image()"))
         self.connect(self.prevImageAct, SIGNAL("triggered()"), self,
-                SLOT("self.previous_image()"))
+                SLOT("previous_image()"))
         self.connect(self.newImageAct, SIGNAL("triggered()"), self,
-                SLOT("self.import_image()"))
+                SLOT("import_image()"))
         self.connect(self.deleteImageAct, SIGNAL("triggered()"), self,
-                SLOT("self.delete_image()"))
+                SLOT("delete_image()"))
 
         # Add the actions into the toolbar
         self.imageTools.addAction(self.prevImageAct)
