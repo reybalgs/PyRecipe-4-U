@@ -54,7 +54,44 @@ class MainWindow(QWidget):
         """
         self.refresh_current_recipe()
         self.refresh_recipe_info()
+        self.generateServingSize.setValue(self.recipes[self.currentRecipe].servingSize)
         self.refresh_image()
+
+    def generate_shopping_list(self):
+        """
+        Generates the shopping list for the recipe.
+
+        A "shopping list" is a prescribed list of ingredients that the user
+        will have to acquire based on a pre-given serving size (usually
+        different from the recipe's.
+        """
+        # First we need to clear the text
+        self.generatedList.clear()
+        # Get the difference of the preferred serving size with the recipe's
+        # own serving size. This will be used to calclate the ingredients
+        # required.
+        difference = (self.generateServingSize.value() /
+                self.recipes[self.currentRecipe].servingSize)
+
+        # A simple counter variable
+        counter = 0
+
+        # Put some introductory text
+        self.generatedList.insertHtml("To cook and serve <b>" +
+                self.recipes[self.currentRecipe].name + "</b> for <b>" +
+                str(self.generateServingSize.value()) + "</b> people instead " +
+                " of just <b>" +
+                str(self.recipes[self.currentRecipe].servingSize) + 
+                "</b>, you will need the following:")
+
+        # Loop through the ingredients and list out their new quantities per
+        # unit
+        for ingredient in self.recipes[self.currentRecipe].ingredients:
+            self.generatedList.insertPlainText("\n")
+            self.generatedList.insertHtml(str(counter + 1) + ". " +
+                    "<b>" + ingredient['name'] + ": " + 
+                    str(ingredient['quantity'] * difference))
+            counter += 1
 
     def refresh_current_recipe(self):
         """
@@ -169,9 +206,12 @@ class MainWindow(QWidget):
         """
         # Use a placeholder if there are no images in the recipe
         if(len(self.recipes[self.currentRecipe].images) == 0):
-            self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
+            self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png").
+                    scaledToWidth(320))
         else:
-            self.imageLabel.setPixmap(self.recipes[self.currentRecipe].images[self.currentImage])
+            self.imageLabel.setPixmap(QPixmap(
+                self.recipes[self.currentRecipe].
+                images[self.currentImage]).scaledToWidth(320))
 
     def edit_ingredients(self):
         """
@@ -207,7 +247,7 @@ class MainWindow(QWidget):
             # Go through the list of ingredients
             self.ingredientsData.addItem(str(counter) + '. ' +
                     ingredient['name'] + ': ' + str(ingredient['quantity']) +
-                    ' ' + ingredient['unit'] + '\n')
+                    ' ' + ingredient['unit'])
             counter += 1
 
         self.ingredientsData.addItem("+ Add an Ingredient")
@@ -227,7 +267,7 @@ class MainWindow(QWidget):
         for instruction in self.recipes[self.currentRecipe].instructions:
             # Go through the list of instructions
             self.instructionsData.addItem(str(counter) + '. ' +
-                instruction + '\n')
+                instruction)
             counter += 1
 
         self.instructionsData.addItem("+ Add an Instruction")
@@ -283,7 +323,7 @@ class MainWindow(QWidget):
         filePath = '' # Initialize an empty filepath
         if fileDialog.exec_():
             filePath = fileDialog.selectedFiles()
-            print filePath
+            print(filePath)
 
         if (filePath):
             # There is a file, so let's continue on
@@ -299,7 +339,7 @@ class MainWindow(QWidget):
             # Set the main and subtext of the shinylist item
             item.set_main_text(recipe.name)
             item.set_sub_text(recipe.course + ', serves ' +
-                              str(recipe.servingSize) + ' people')
+                    str(recipe.servingSize) + ' people')
 
             # Add the item to the shinylist
             self.recipeList.add_item(item)
@@ -354,7 +394,7 @@ class MainWindow(QWidget):
 
             # Open the file again for reading
             file = open(filePath[0], 'r')
-            print file.read()
+            print(file.read())
             file.close()
 
     def refresh_recipe_info(self):
@@ -541,6 +581,7 @@ class MainWindow(QWidget):
 
         self.generateServingSize = QDoubleSpinBox()
         self.generatedList = QTextBrowser()
+        self.generateButton = QPushButton("Generate")
 
         self.shoppingListGroup.setLayout(self.shoppingListLayout)
         generateInstructions = QLabel("Automatically calculate the amount " +
@@ -549,8 +590,12 @@ class MainWindow(QWidget):
         self.shoppingListLayout.addWidget(generateInstructions, 0, 1)
         self.shoppingListLayout.addWidget(QLabel("Serving Size"), 1, 0)
         self.shoppingListLayout.addWidget(self.generateServingSize, 1, 1)
-        self.shoppingListLayout.addWidget(QLabel("You will need"), 2, 0)
-        self.shoppingListLayout.addWidget(self.generatedList)
+        self.shoppingListLayout.addWidget(self.generateButton, 1, 2)
+        self.shoppingListLayout.addWidget(self.generatedList, 2, 1)
+
+        # Connect the signal to initiate the generation of a shopping list
+        self.connect(self.generateButton, SIGNAL("clicked()"), self,
+                SLOT("generate_shopping_list()"))
 
         ######################################################################
         # Images items
@@ -586,7 +631,7 @@ class MainWindow(QWidget):
         self.imageTools.addAction(self.nextImageAct)
 
         self.imageLabel = QLabel()
-        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png"))
+        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png").scaledToWidth(320))
         self.imageLabel.setScaledContents(True)
 
         self.imageLayout.addWidget(self.imageLabel)
@@ -664,7 +709,7 @@ class MainWindow(QWidget):
         # Variable to "announce" whether the system is ready to edit a recipe.
         self.edit_selected = 0
 
-        print 'Initializing UI...' # some debug messages
+        print('Initializing UI...') # some debug messages
 
         # Create list of recipes
         self.recipes = []
