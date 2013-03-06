@@ -246,9 +246,15 @@ class MainWindow(QWidget):
         # Put the text in the ingredients list
         for ingredient in self.recipes[self.currentRecipe].ingredients:
             # Go through the list of ingredients
-            self.ingredientsData.addItem(str(counter) + '. ' +
-                    ingredient['name'] + ': ' + str(ingredient['quantity']) +
-                    ' ' + ingredient['unit'])
+            string = str(counter) + '. ' + ingredient['name'] + ': '
+            if(ingredient['quantity'] % 1 > 0):
+                # Our quantity is a real number, retain its value
+                string += str(ingredient['quantity']) + ' '
+            else:
+                # Turn it into a proper integer
+                string += str(format(ingredient['quantity'], '.0f')) + ' '
+            string += ingredient['unit'].lower()
+            self.ingredientsData.addItem(string)
             counter += 1
 
         self.ingredientsData.addItem("+ Add an Ingredient")
