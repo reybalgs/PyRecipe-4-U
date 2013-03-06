@@ -90,7 +90,8 @@ class MainWindow(QWidget):
             self.generatedList.insertPlainText("\n")
             self.generatedList.insertHtml(str(counter + 1) + ". " +
                     "<b>" + ingredient['name'] + ": " + 
-                    str(ingredient['quantity'] * difference))
+                    str(ingredient['quantity'] * difference) + " " +
+                    ingredient['unit'])
             counter += 1
 
     def refresh_current_recipe(self):
