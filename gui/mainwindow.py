@@ -414,7 +414,6 @@ class MainWindow(QWidget):
             print('Error! Wrong course data in recipe!')
         self.servingSizeData.setValue(
                 self.recipes[self.currentRecipe].servingSize)
-
         self.refresh_ingredients()
         self.refresh_instructions()
 
@@ -696,7 +695,7 @@ class MainWindow(QWidget):
 
         # Set the window title
         self.setWindowTitle("PyRecipe-4-U")
-        self.show() # Show the window
+        self.showMaximized() # Show the window
 
     def __init__(self, parent=None):
         """
