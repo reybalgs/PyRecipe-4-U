@@ -533,16 +533,22 @@ class MainWindow(QWidget):
         self.connect(self.quitAct, SIGNAL("triggered()"), self,
                 SLOT("close()"))
 
+        # Edit ingredients and instruction signals and slots
+        self.editIngredientsAct = QAction("Edit Ingredients", self)
+        self.editInstructionsAct = QAction("Edit Instructions", self)
+        self.connect(self.editIngredientsAct, SIGNAL("triggered()"), self,
+                SLOT("edit_ingredients()"))
+        self.connect(self.editInstructionsAct, SIGNAL("triggered()"), self,
+                SLOT("edit_instructions()"))
+
         self.fileMenu.addAction(self.newRecipeAct)
         self.fileMenu.addAction(self.importRecipeAct)
         self.fileMenu.addAction(self.exportRecipeAct)
         self.fileMenu.addAction(self.deleteRecipeAct)
         self.fileMenu.addSeparator()
-        self.fileMenu.addAction("Generate Shopping List")
         self.fileMenu.addAction(self.quitAct)
-        self.editMenu.addAction("Ingredients")
-        self.editMenu.addAction("Instructions")
-        self.editMenu.addAction("Images")
+        self.editMenu.addAction(self.editIngredientsAct)
+        self.editMenu.addAction(self.editInstructionsAct)
         self.helpMenu.addAction("About PyRecipe4U")
         # Add the menus to the menu bar
         self.menuBar.addMenu(self.fileMenu)
