@@ -77,21 +77,26 @@ class MainWindow(QWidget):
         counter = 0
 
         # Put some introductory text
-        self.generatedList.insertHtml("To cook and serve <b>" +
-                self.recipes[self.currentRecipe].name + "</b> for <b>" +
-                str(self.generateServingSize.value()) + "</b> people instead " +
-                " of just <b>" +
-                str(self.recipes[self.currentRecipe].servingSize) + 
-                "</b>, you will need the following:")
+        string = ("To cook and serve " + self.recipes[self.currentRecipe].name
+                + " for " + str(format(self.generateServingSize.value(),
+                    '.0f')) + " instead of just " +
+                str(self.recipes[self.currentRecipe].servingSize) +
+                " you will need the following:\n")
+        self.generatedList.insertPlainText(string)
 
         # Loop through the ingredients and list out their new quantities per
         # unit
         for ingredient in self.recipes[self.currentRecipe].ingredients:
-            self.generatedList.insertPlainText("\n")
-            self.generatedList.insertHtml(str(counter + 1) + ". " +
-                    "<b>" + ingredient['name'] + ": " + 
-                    str(ingredient['quantity'] * difference) + " " +
-                    ingredient['unit'])
+            string = str(counter + 1) + '. ' + ingredient['name'] + ': '
+            if(ingredient['quantity'] % 1 > 0):
+                # Our quantity is a real number, retain its value
+                string += str((ingredient['quantity'] * difference)) + ' '
+            else:
+                # Turn the float into an easier-to-read integer
+                string += str(format((ingredient['quantity'] * 
+                        difference), '.0f')) + ' '
+            string += ingredient['unit'].lower()
+            self.generatedList.append(string)
             counter += 1
 
     def refresh_current_recipe(self):
