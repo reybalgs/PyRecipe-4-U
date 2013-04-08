@@ -54,7 +54,8 @@ class MainWindow(QWidget):
         """
         self.refresh_current_recipe()
         self.refresh_recipe_info()
-        self.generateServingSize.setValue(self.recipes[self.currentRecipe].servingSize)
+        self.generateServingSize.setValue(self.recipes[self.currentRecipe]
+                .servingSize)
         self.refresh_image()
 
     def generate_shopping_list(self):
@@ -79,9 +80,9 @@ class MainWindow(QWidget):
         # Put some introductory text
         string = ("To cook and serve " + self.recipes[self.currentRecipe].name
                 + " for " + str(format(self.generateServingSize.value(),
-                    '.0f')) + " instead of just " +
-                str(self.recipes[self.currentRecipe].servingSize) +
-                " you will need the following:\n")
+                    '.0f')) + " people instead of just " +
+                str(format(self.recipes[self.currentRecipe].servingSize,
+                    '.0f')) + " people you will need the following:\n")
         self.generatedList.insertPlainText(string)
 
         # Loop through the ingredients and list out their new quantities per
@@ -232,7 +233,8 @@ class MainWindow(QWidget):
         ingredientsDialog.exec_()
 
         # Get the updated list of ingredients from the dialog
-        self.recipes[self.currentRecipe].ingredients = ingredientsDialog.get_ingredients()
+        self.recipes[self.currentRecipe].ingredients = (
+                ingredientsDialog.get_ingredients())
 
         # Refresh the list of ingredients
         self.refresh_ingredients()
@@ -244,8 +246,8 @@ class MainWindow(QWidget):
         self.ingredientsData.clear() # clear the list first
         
         # Let's check first if the recipe has any ingredients.
-        # If not, we will put a dummy entry in the ingredients so that the user
-        # can add one.
+        # If not, we will put a dummy entry in the ingredients so that the
+        # user can add one.
         counter = 1 # Counter variable
 
         # Put the text in the ingredients list
@@ -320,8 +322,8 @@ class MainWindow(QWidget):
 
     def import_recipe(self):
         """
-        Imports a recipe file (.rcpe) from a directory in the user's filesystem
-        and then adds it to the current list of recipes.
+        Imports a recipe file (.rcpe) from a directory in the user's 
+        filesystem and then adds it to the current list of recipes.
         """
         # Create a recipe object
         recipe = RecipeModel()
@@ -648,7 +650,8 @@ class MainWindow(QWidget):
         self.imageTools.addAction(self.nextImageAct)
 
         self.imageLabel = QLabel()
-        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png").scaledToWidth(320))
+        self.imageLabel.setPixmap(QPixmap("./gui/images/placeholder.png").
+                scaledToWidth(320))
         self.imageLabel.setScaledContents(True)
 
         self.imageLayout.addWidget(self.imageLabel)
